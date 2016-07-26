@@ -1,22 +1,28 @@
 {
   "name": "BLBubbleFilters",
   "version": "0.1.0",
-  "summary": "A short description of BLBubbleFilters.",
-  "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/BLBubbleFilters",
+  "summary": "Apple Music style bubble filters.",
+  "description": "Apple Music style bubble filters. Inspired by: https://github.com/ProudOfZiggy/SIFloatingCollection_Swift",
+  "homepage": "https://github.com/BellAppLab/BLBubbleFilters",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "André Campana": "andre@foundersfactory.co"
+    "Bell App Lab": "apps@bellapplab.com"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/BLBubbleFilters.git",
+    "git": "https://github.com/BellAppLab/BLBubbleFilters.git",
     "tag": "0.1.0"
   },
+  "social_media_url": "https://twitter.com/BellAppLab",
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "BLBubbleFilters/Classes/**/*"
+  "source_files": "BLBubbleFilters/Classes/**/*",
+  "public_header_files": "Pod/Classes/**/*.h",
+  "frameworks": [
+    "UIKit",
+    "SpriteKit"
+  ]
 }

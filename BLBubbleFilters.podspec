@@ -1,15 +1,7 @@
-#
-# Be sure to run `pod lib lint BLBubbleFilters.podspec' to ensure this is a
-# valid spec before submitting.
-#
-# Any lines starting with a # are optional, but their use is encouraged
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
-#
-
 Pod::Spec.new do |s|
   s.name             = 'BLBubbleFilters'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of BLBubbleFilters.'
+  s.summary          = 'Apple Music style bubble filters.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,25 +10,20 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Apple Music style bubble filters. Inspired by: https://github.com/ProudOfZiggy/SIFloatingCollection_Swift
                        DESC
 
-  s.homepage         = 'https://github.com/<GITHUB_USERNAME>/BLBubbleFilters'
+  s.homepage         = 'https://github.com/BellAppLab/BLBubbleFilters'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'André Campana' => 'andre@foundersfactory.co' }
-  s.source           = { :git => 'https://github.com/<GITHUB_USERNAME>/BLBubbleFilters.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = { 'Bell App Lab' => 'apps@bellapplab.com' }
+  s.source           = { :git => 'https://github.com/BellAppLab/BLBubbleFilters.git', :tag => s.version.to_s }
+  s.social_media_url = 'https://twitter.com/BellAppLab'
 
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'BLBubbleFilters/Classes/**/*'
-  
-  # s.resource_bundles = {
-  #   'BLBubbleFilters' => ['BLBubbleFilters/Assets/*.png']
-  # }
 
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.public_header_files = 'Pod/Classes/**/*.h'
+  s.frameworks = 'UIKit', 'SpriteKit'
 end
