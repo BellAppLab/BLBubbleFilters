@@ -26,8 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)textForBubbleAtIndex:(NSInteger)index;
 @optional
 - (SKColor * __nullable)bubbleColorForState:(BLBubbleNodeState)state;
-- (UIFont * __nullable)bubbleFont;
+- (NSString * __nullable)bubbleFontName;
 - (SKColor * __nullable)bubbleTextColor;
+- (CGFloat)bubbleRadius;
 @end
 
    
@@ -36,12 +37,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 //Delegate and Data Source
 @property (nonatomic, weak) id<BLBubbleSceneDelegate> __nullable bubbleDelegate;
-@property (nonatomic, weak) id<BLBubbleSceneDataSource> __nullable buddleDataSource;
+@property (nonatomic, weak) id<BLBubbleSceneDataSource> __nullable bubbleDataSource;
 
 //Loading
 - (void)reload;
 
-//Physics
+//Nodes
 @property (nonatomic, readonly) SKFieldNode *magneticField;
 
 @end

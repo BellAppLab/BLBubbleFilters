@@ -9,14 +9,7 @@
 #import "BLBubbleNode.h"
 
 
-#pragma mark Typedefs
-typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
-    BLBubbleNodeStateCountFirst = BLBubbleNodeStateRemoved,
-    BLBubbleNodeStateCountLast = BLBubbleNodeStateSuperHighlighted
-};
-
-
-#pragma mark - Main Implementation
+#pragma mark Private Interface
 @interface BLBubbleNode()
 
 //Setup
@@ -30,6 +23,7 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 @end
 
 
+#pragma mark - Main Implementation
 @implementation BLBubbleNode
 
 #pragma Convenience initialiser
@@ -38,14 +32,7 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 {
     if (self = [BLBubbleNode shapeNodeWithCircleOfRadius:radius]) {
         _state = BLBubbleNodeStateNormal;
-        
         _text = text;
-        
-        CGRect boundingBox = CGPathGetBoundingBox(self.path);
-        CGFloat radius = boundingBox.size.width / 2.0;
-        self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:radius + 1.5];
-        self.fillColor = [SKColor blackColor];
-        self.strokeColor = self.fillColor;
         
         [self configure];
     }
@@ -74,6 +61,19 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 
 - (void)configure
 {
+    [self setColor:[UIColor blackColor]];
+    
+    self.name = @"bubble";
+    self.userInteractionEnabled = NO;
+    
+    self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path ? self.path : CGPathCreateMutable()];
+    self.physicsBody.dynamic = YES;
+    self.physicsBody.affectedByGravity = NO;
+    self.physicsBody.allowsRotation = NO;
+    self.physicsBody.mass = 0.3;
+    self.physicsBody.friction = 0.0;
+    self.physicsBody.linearDamping = 3;
+    
     _label = [SKLabelNode labelNodeWithFontNamed:@""];
     _label.text = _text;
     _label.position = CGPointZero;
@@ -84,6 +84,17 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
     _label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
     [self addChild:_label];
 }
+
+#pragma mark UI
+- (void)setColor:(SKColor *)color
+{
+    if (!color) {
+        color = [SKColor blackColor];
+    }
+    self.fillColor = color;
+    self.strokeColor = color;
+}
+
 
 #pragma mark State and animations
 @synthesize state = _state;
@@ -113,7 +124,12 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
                 return [SKAction scaleTo:2.0
                                 duration:0.2];
             case BLBubbleNodeStateRemoved:
-                return [SKAction fadeOutWithDuration:0.2];
+            {
+                SKAction *disappear = [SKAction fadeOutWithDuration:0.2];
+                SKAction *explode = [SKAction scaleTo:1.2
+                                             duration:0.2];
+                return [SKAction group:@[disappear, explode]];
+            }
             default:
                 break;
         }

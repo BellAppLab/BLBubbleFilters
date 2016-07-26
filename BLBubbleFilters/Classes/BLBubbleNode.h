@@ -19,6 +19,12 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeState) {
     BLBubbleNodeStateSuperHighlighted = 3
 };
 
+typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
+    BLBubbleNodeStateCountFirst = BLBubbleNodeStateRemoved,
+    BLBubbleNodeStateCountLast = BLBubbleNodeStateSuperHighlighted
+};
+
+
 #pragma mark - Main Class
 @interface BLBubbleNode : SKShapeNode
 
@@ -38,6 +44,7 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeState) {
  UI
  */
 @property (nonatomic, readonly) SKLabelNode *label;
+- (void)setColor:(SKColor * __nullable)color;
 
 @end
 
