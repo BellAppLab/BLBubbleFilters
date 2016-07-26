@@ -1,0 +1,16 @@
+PODS:
+  - BLBubbleFilters (0.1.0)
+
+DEPENDENCIES:
+  - BLBubbleFilters (from `../`)
+
+EXTERNAL SOURCES:
+  BLBubbleFilters:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  BLBubbleFilters: c7e65e2399ac5d247e5e1e77f8215edd1df74606
+
+PODFILE CHECKSUM: 0af646027c9bbe92f8d0d1ad17901a1ff9548cb1
+
+COCOAPODS: 1.0.1
