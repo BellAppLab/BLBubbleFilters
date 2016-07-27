@@ -174,6 +174,8 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         [bubble runAction:[SKAction runBlock:^{
             [bubble setColor:color];
         }]];
+        [self.bubbleDelegate didSelectBubble:bubble
+                                     atIndex:index];
     }
 }
 
