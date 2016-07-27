@@ -61,8 +61,6 @@
 
 - (void)configure
 {
-    [self setColor:[UIColor blackColor]];
-    
     self.name = @"bubble";
     
     self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:1.5 + CGPathGetBoundingBox(self.path).size.width / 2.0];
@@ -82,16 +80,6 @@
     _label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
     _label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
     [self addChild:_label];
-}
-
-#pragma mark UI
-- (void)setColor:(SKColor *)color
-{
-    if (!color) {
-        color = [SKColor blackColor];
-    }
-    self.fillColor = color;
-    self.strokeColor = color;
 }
 
 

@@ -36,14 +36,18 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 //Handling touches
 @property (nonatomic, assign) CGPoint touchPoint;
 @property (nonatomic, weak) NSTimer *touchTimer;
+@property (nonatomic, assign) BOOL touchTapped;
 @property (nonatomic, assign) BOOL touchesMoved;
 - (BLBubbleNode * __nullable)bubbleAtTouchPoint;
 - (void)handleLongPressTimer:(NSTimer *)timer;
+- (void)resetTouches;
 
 //Nodes
 @property (nonatomic, assign) CGFloat pushStrength;
 @property (nonatomic, strong) NSMutableArray *bubbles;
-@property (nonatomic, strong) NSMutableDictionary *colors;
+@property (nonatomic, strong) NSMutableDictionary *fillColors;
+@property (nonatomic, strong) NSMutableDictionary *strokeColors;
+@property (nonatomic, strong) NSMutableDictionary *textColors;
 - (CGPoint)randomPositionWithRadius:(CGFloat)radius;
 - (void)updateBubble:(BLBubbleNode *)bubble
              toState:(BLBubbleNodeState)nextState;
@@ -97,26 +101,43 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 {
     //Resetting stuff
     _bubbles = [NSMutableArray new];
-    _colors = [NSMutableDictionary new];
+    _fillColors = [NSMutableDictionary new];
+    _strokeColors = [NSMutableDictionary new];
+    _textColors = [NSMutableDictionary new];
     
     NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubbles];
     
     //Getting colours
-    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleColorForState:)]) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleFillColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-            color = [self.bubbleDataSource bubbleColorForState:(NSInteger)i];
+            color = [self.bubbleDataSource bubbleFillColorForState:(NSInteger)i];
             //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
-            [_colors setObject:color ? color : [UIColor clearColor]
-                        forKey:@(i)];
+            [_fillColors setObject:color ? color : [UIColor clearColor]
+                            forKey:@(i)];
+        }
+    }
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleStrokeColorForState:)]) {
+        SKColor *color;
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            color = [self.bubbleDataSource bubbleStrokeColorForState:(NSInteger)i];
+            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
+            [_strokeColors setObject:color ? color : [UIColor clearColor]
+                            forKey:@(i)];
+        }
+    }
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleTextColorForState:)]) {
+        SKColor *color;
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            color = [self.bubbleDataSource bubbleTextColorForState:(NSInteger)i];
+            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
+            [_textColors setObject:color ? color : [UIColor clearColor]
+                              forKey:@(i)];
         }
     }
     
     //Getting the font
     NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFont)] ? [self.bubbleDataSource bubbleFontName] : @"";
-    
-    //Getting the text colour
-    SKColor *textColour = [self.bubbleDataSource respondsToSelector:@selector(bubbleTextColor)] ? [self.bubbleDataSource bubbleTextColor] : [UIColor whiteColor];
     
     //Creating bubbles
     CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadius)] ? [self.bubbleDataSource bubbleRadius] : 30.0;
@@ -126,9 +147,11 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                                             andText:[self.bubbleDataSource textForBubbleAtIndex:(NSInteger)i]];
         
         //making the bubble beautiful
-        node.label.fontColor = textColour;
         node.label.fontName = fontName;
-        [node setColor:[_colors objectForKey:@(BLBubbleNodeStateNormal)]];
+        NSNumber *normalState = @(BLBubbleNodeStateNormal);
+        node.fillColor = [_fillColors objectForKey:normalState];
+        node.strokeColor = [_strokeColors objectForKey:normalState];
+        node.label.fontColor = [_textColors objectForKey:normalState];
         
         //Tucking the bubble in
         [_bubbles addObject:node];
@@ -166,10 +189,15 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     if (nextState == BLBubbleNodeStateInvalid) return;
     
     bubble.state = nextState;
-    SKColor *color = [self.colors objectForKey:@(nextState)];
-    if (!color) color = bubble.strokeColor;
+    NSNumber *numberState = @(nextState);
+    __weak typeof(self) weakSelf = self;
     [bubble runAction:[SKAction runBlock:^{
-        [bubble setColor:color];
+#warning TODO: fix missing colours
+        //If the data source hasn't implemented all colours, we shouldn't default to [UIColor clearColor]
+        //We should not change the colour at all
+        bubble.fillColor = [[weakSelf fillColors] objectForKey:numberState];
+        bubble.strokeColor = [[weakSelf strokeColors] objectForKey:numberState];
+        bubble.label.fontColor = [[weakSelf textColors] objectForKey:numberState];
     }]];
     [self.bubbleDelegate didSelectBubble:bubble
                                  atIndex:index];
@@ -190,6 +218,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                                                      userInfo:nil
                                                       repeats:NO];
     self.touchesMoved = NO;
+    self.touchTapped = NO;
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches
@@ -246,9 +275,10 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     if (self.touchesMoved) return;
     
     BLBubbleNode *bubble = [self bubbleAtTouchPoint];
-    self.touchPoint = CGPointZero;
-    self.touchesMoved = NO;
+    [self resetTouches];
     if (!bubble) return;
+    
+    self.touchTapped = YES;
     
     [self updateBubble:bubble
                toState:[bubble nextState]];
@@ -257,9 +287,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 - (void)touchesCancelled:(NSSet<UITouch *> * __nullable)touches
                withEvent:(UIEvent * __nullable)event
 {
-    //Resetting stuff
-    self.touchPoint = CGPointZero;
-    self.touchesMoved = NO;
+    [self resetTouches];
 }
 
 - (BLBubbleNode * __nullable)bubbleAtTouchPoint
@@ -277,16 +305,22 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     [timer invalidate];
     
     //We're not processing this touch if a pan has been recognized
-    if (self.touchesMoved) return;
+    if (self.touchesMoved || self.touchTapped) return;
     
     BLBubbleNode *bubble = [self bubbleAtTouchPoint];
-    self.touchPoint = CGPointZero;
-    self.touchesMoved = NO;
+    [self resetTouches];
     if (!bubble) return;
     
     //If the touch lasted for more than our threshold, we treat it as a long press
     [self updateBubble:bubble
                toState:BLBubbleNodeStateRemoved];
+}
+
+- (void)resetTouches
+{
+    self.touchPoint = CGPointZero;
+    self.touchesMoved = NO;
+    self.touchTapped = NO;
 }
 
 @end

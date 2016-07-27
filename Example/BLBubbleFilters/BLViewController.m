@@ -46,7 +46,7 @@
     return @"test";
 }
 
-- (SKColor *)bubbleColorForState:(BLBubbleNodeState)state
+- (SKColor *)bubbleFillColorForState:(BLBubbleNodeState)state
 {
     switch (state) {
         case BLBubbleNodeStateNormal:
@@ -58,6 +58,16 @@
         default:
             return nil;
     }
+}
+
+- (SKColor *)bubbleStrokeColorForState:(BLBubbleNodeState)state
+{
+    return [UIColor blueColor];
+}
+
+- (SKColor *)bubbleTextColorForState:(BLBubbleNodeState)state
+{
+    return [UIColor whiteColor];
 }
 
 @end

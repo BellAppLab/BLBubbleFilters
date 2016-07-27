@@ -44,7 +44,6 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
  UI
  */
 @property (nonatomic, readonly) SKLabelNode *label;
-- (void)setColor:(SKColor * __nullable)color;
 
 /*
  Aux
