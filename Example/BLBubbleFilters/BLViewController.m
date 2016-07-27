@@ -7,8 +7,9 @@
 //
 
 #import "BLViewController.h"
+@import BLBubbleFilters;
 
-@interface BLViewController ()
+@interface BLViewController () <BLBubbleSceneDataSource>
 
 @end
 
@@ -17,13 +18,46 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    BLBubbleScene *scene = [[BLBubbleScene alloc] initWithSize:self.view.frame.size];
+    scene.bubbleDataSource = self;
+    scene.backgroundColor = [UIColor whiteColor];
+    [(SKView *)self.view presentScene:scene];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (NSInteger)numberOfBubbles
+{
+    return 10;
+}
+
+- (NSString *)textForBubbleAtIndex:(NSInteger)index
+{
+    return @"test";
+}
+
+- (SKColor *)bubbleColorForState:(BLBubbleNodeState)state
+{
+    switch (state) {
+        case BLBubbleNodeStateNormal:
+            return [UIColor greenColor];
+        case BLBubbleNodeStateHighlighted:
+            return [UIColor yellowColor];
+        case BLBubbleNodeStateSuperHighlighted:
+            return [UIColor redColor];
+        default:
+            return nil;
+    }
 }
 
 @end

@@ -64,9 +64,8 @@
     [self setColor:[UIColor blackColor]];
     
     self.name = @"bubble";
-    self.userInteractionEnabled = NO;
     
-    self.physicsBody = [SKPhysicsBody bodyWithPolygonFromPath:self.path ? self.path : CGPathCreateMutable()];
+    self.physicsBody = [SKPhysicsBody bodyWithCircleOfRadius:1.5 + CGPathGetBoundingBox(self.path).size.width / 2.0];
     self.physicsBody.dynamic = YES;
     self.physicsBody.affectedByGravity = NO;
     self.physicsBody.allowsRotation = NO;
@@ -103,6 +102,7 @@
 {
     if (_state != state) {
         //Animate
+        [self removeAllActions];
         [self runAction:[self actionForKey:[self animationKeyForState:state]]];
     }
     
@@ -121,14 +121,15 @@
                 return [SKAction scaleTo:1.3
                                 duration:0.2];
             case BLBubbleNodeStateSuperHighlighted:
-                return [SKAction scaleTo:2.0
+                return [SKAction scaleTo:1.8
                                 duration:0.2];
             case BLBubbleNodeStateRemoved:
             {
                 SKAction *disappear = [SKAction fadeOutWithDuration:0.2];
                 SKAction *explode = [SKAction scaleTo:1.2
                                              duration:0.2];
-                return [SKAction group:@[disappear, explode]];
+                SKAction *remove = [SKAction removeFromParent];
+                return [SKAction sequence:@[[SKAction group:@[disappear, explode]], remove]];
             }
             default:
                 break;
@@ -155,7 +156,7 @@
 - (BLBubbleNodeState)stateForKey:(NSString *)key
 {
     for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-        if ([self animationKeyForState:(NSInteger)i]) {
+        if ([[self animationKeyForState:(NSInteger)i] isEqualToString:key]) {
             return i;
         }
     }
@@ -170,9 +171,9 @@
         case BLBubbleNodeStateNormal:
             return @"BLBubbleNodeStateNormal";
         case BLBubbleNodeStateHighlighted:
-            return @"BLBubbleNodeStateNormal";
+            return @"BLBubbleNodeStateHighlighted";
         case BLBubbleNodeStateSuperHighlighted:
-            return @"BLBubbleNodeStateNormal";
+            return @"BLBubbleNodeStateSuperHighlighted";
         default:
             return nil;
     }

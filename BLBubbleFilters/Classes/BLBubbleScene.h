@@ -26,8 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)textForBubbleAtIndex:(NSInteger)index;
 @optional
 - (SKColor * __nullable)bubbleColorForState:(BLBubbleNodeState)state;
-- (NSString * __nullable)bubbleFontName;
-- (SKColor * __nullable)bubbleTextColor;
+- (NSString *)bubbleFontName;
+- (SKColor *)bubbleTextColor;
 - (CGFloat)bubbleRadius;
 @end
 

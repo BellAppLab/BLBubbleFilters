@@ -65,13 +65,19 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     _magneticField.strength = 8000;
     _magneticField.position = CGPointMake(self.size.width / 2, self.size.height / 2);
     [self addChild:_magneticField];
+    
+    CGRect bodyFrame = self.frame;
+    bodyFrame.size.width = _magneticField.minimumRadius;
+    bodyFrame.origin.x -= bodyFrame.size.width / 2.0;
+    bodyFrame.size.height = self.size.height;
+    bodyFrame.origin.y = self.frame.size.height - bodyFrame.size.height;
+    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:bodyFrame];
 }
 
 - (void)didMoveToView:(SKView *)view
 {
     [super didMoveToView:view];
     
-    self.physicsBody = [SKPhysicsBody bodyWithEdgeLoopFromRect:view.frame];
     [self reload];
 }
 
@@ -87,8 +93,11 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     
     //Getting colours
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleColorForState:)]) {
+        SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-            [_colors setObject:[self.bubbleDataSource bubbleColorForState:(NSInteger)i]
+            color = [self.bubbleDataSource bubbleColorForState:(NSInteger)i];
+            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
+            [_colors setObject:color ? color : [UIColor clearColor]
                         forKey:@(i)];
         }
     }
@@ -123,8 +132,8 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 - (CGPoint)randomPositionWithRadius:(CGFloat)radius
 {
     CGFloat diameter = radius * 2.0;
-    CGFloat x = (_bubbles.count % 2 == 0 || _bubbles.count == 0) ? getRandomCGFloatWith(self.frame.size.width + diameter, self.frame.size.width + 200) : getRandomCGFloatWith(-200, -diameter);
-    CGFloat y = getRandomCGFloatWith(-200, self.frame.size.height - 200 - diameter);
+    CGFloat x = (_bubbles.count % 2 == 0 || _bubbles.count == 0) ? getRandomCGFloatWith(self.frame.size.width + diameter, self.frame.size.width + 50) : getRandomCGFloatWith(-50, -diameter);
+    CGFloat y = getRandomCGFloatWith(-50, self.frame.size.height - 50 - diameter);
     return CGPointMake(x, y);
 }
 
@@ -142,29 +151,29 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 - (void)updateBubbleState:(BLBubbleNode *)bubble
 {
     NSInteger index = [self.bubbles indexOfObject:bubble];
-    if (index = NSNotFound) return;
+    if (index == NSNotFound) return;
+    BLBubbleNodeState nextState = BLBubbleNodeStateInvalid;
     switch (bubble.state) {
         case BLBubbleNodeStateNormal:
-            bubble.state = BLBubbleNodeStateHighlighted;
-            [bubble runAction:[SKAction colorizeWithColor:[self.colors objectForKey:@(BLBubbleNodeStateHighlighted)]
-                                         colorBlendFactor:1.0
-                                                 duration:0.2]];
+            nextState = BLBubbleNodeStateHighlighted;
             break;
         case BLBubbleNodeStateHighlighted:
-            bubble.state = BLBubbleNodeStateSuperHighlighted;
-            [bubble runAction:[SKAction colorizeWithColor:[self.colors objectForKey:@(BLBubbleNodeStateSuperHighlighted)]
-                                         colorBlendFactor:1.0
-                                                 duration:0.2]];
+            nextState = BLBubbleNodeStateSuperHighlighted;
             break;
         case BLBubbleNodeStateSuperHighlighted:
-            bubble.state = BLBubbleNodeStateNormal;
-            [bubble runAction:[SKAction colorizeWithColor:[self.colors objectForKey:@(BLBubbleNodeStateNormal)]
-                                         colorBlendFactor:1.0
-                                                 duration:0.2]];
+            nextState = BLBubbleNodeStateNormal;
             break;
 #warning TODO: add the remove action
         default:
             break;
+    }
+    if (nextState != BLBubbleNodeStateInvalid) {
+        bubble.state = nextState;
+        SKColor *color = [self.colors objectForKey:@(nextState)];
+        if (!color) color = bubble.strokeColor;
+        [bubble runAction:[SKAction runBlock:^{
+            [bubble setColor:color];
+        }]];
     }
 }
 
