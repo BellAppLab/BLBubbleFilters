@@ -22,6 +22,11 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 };
 
 
+#pragma mark Consts
+#define PanThreshold 0.001
+#define LongPressThreshold 2.0
+
+
 #pragma mark Private Interface
 @interface BLBubbleScene()
 
@@ -30,13 +35,18 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 
 //Handling touches
 @property (nonatomic, assign) CGPoint touchPoint;
+@property (nonatomic, weak) NSTimer *touchTimer;
+@property (nonatomic, assign) BOOL touchesMoved;
+- (BLBubbleNode * __nullable)bubbleAtTouchPoint;
+- (void)handleLongPressTimer:(NSTimer *)timer;
 
 //Nodes
 @property (nonatomic, assign) CGFloat pushStrength;
 @property (nonatomic, strong) NSMutableArray *bubbles;
 @property (nonatomic, strong) NSMutableDictionary *colors;
 - (CGPoint)randomPositionWithRadius:(CGFloat)radius;
-- (void)updateBubbleState:(BLBubbleNode *)bubble;
+- (void)updateBubble:(BLBubbleNode *)bubble
+             toState:(BLBubbleNodeState)nextState;
 
 @end
 
@@ -148,35 +158,21 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     return result;
 }
 
-- (void)updateBubbleState:(BLBubbleNode *)bubble
+- (void)updateBubble:(BLBubbleNode *)bubble
+             toState:(BLBubbleNodeState)nextState
 {
     NSInteger index = [self.bubbles indexOfObject:bubble];
     if (index == NSNotFound) return;
-    BLBubbleNodeState nextState = BLBubbleNodeStateInvalid;
-    switch (bubble.state) {
-        case BLBubbleNodeStateNormal:
-            nextState = BLBubbleNodeStateHighlighted;
-            break;
-        case BLBubbleNodeStateHighlighted:
-            nextState = BLBubbleNodeStateSuperHighlighted;
-            break;
-        case BLBubbleNodeStateSuperHighlighted:
-            nextState = BLBubbleNodeStateNormal;
-            break;
-#warning TODO: add the remove action
-        default:
-            break;
-    }
-    if (nextState != BLBubbleNodeStateInvalid) {
-        bubble.state = nextState;
-        SKColor *color = [self.colors objectForKey:@(nextState)];
-        if (!color) color = bubble.strokeColor;
-        [bubble runAction:[SKAction runBlock:^{
-            [bubble setColor:color];
-        }]];
-        [self.bubbleDelegate didSelectBubble:bubble
-                                     atIndex:index];
-    }
+    if (nextState == BLBubbleNodeStateInvalid) return;
+    
+    bubble.state = nextState;
+    SKColor *color = [self.colors objectForKey:@(nextState)];
+    if (!color) color = bubble.strokeColor;
+    [bubble runAction:[SKAction runBlock:^{
+        [bubble setColor:color];
+    }]];
+    [self.bubbleDelegate didSelectBubble:bubble
+                                 atIndex:index];
 }
 
 
@@ -186,7 +182,14 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 {
     UITouch *touch = [touches anyObject];
     if (!touch) return;
+    
     self.touchPoint = [touch locationInNode:self];
+    self.touchTimer = [NSTimer scheduledTimerWithTimeInterval:LongPressThreshold
+                                                       target:self
+                                                     selector:@selector(handleLongPressTimer:)
+                                                     userInfo:nil
+                                                      repeats:NO];
+    self.touchesMoved = NO;
 }
 
 - (void)touchesMoved:(NSSet<UITouch *> *)touches
@@ -206,6 +209,16 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     if (dx == 0 && dy == 0) {
         return;
     }
+    
+    //We're not treating the touch events as a move when deltas are below our threshold (in module)
+    //This is so taps, long presses and pans don't interfere with each other
+    CGFloat tx = dx < 0 ? -dx : dx;
+    CGFloat ty = dy < 0 ? -dy : dy;
+    if (tx < PanThreshold && ty < PanThreshold) {
+        return;
+    }
+    
+    self.touchesMoved = YES;
     
     CGFloat w, h;
     CGVector direction;
@@ -229,18 +242,51 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 - (void)touchesEnded:(NSSet<UITouch *> *)touches
            withEvent:(UIEvent * __nullable)event
 {
-    CGPoint point = self.touchPoint;
+    //We're not processing this touch as a tap or a long press if a pan has been recognized
+    if (self.touchesMoved) return;
+    
+    BLBubbleNode *bubble = [self bubbleAtTouchPoint];
     self.touchPoint = CGPointZero;
-    if (point.x == 0 && point.y == 0) return;
-    id bubble = [self nodeAtPoint:point];
-    if (![bubble isKindOfClass:[BLBubbleNode class]]) return;
-    [self updateBubbleState:bubble];
+    self.touchesMoved = NO;
+    if (!bubble) return;
+    
+    [self updateBubble:bubble
+               toState:[bubble nextState]];
 }
 
 - (void)touchesCancelled:(NSSet<UITouch *> * __nullable)touches
                withEvent:(UIEvent * __nullable)event
 {
+    //Resetting stuff
     self.touchPoint = CGPointZero;
+    self.touchesMoved = NO;
+}
+
+- (BLBubbleNode * __nullable)bubbleAtTouchPoint
+{
+    if (self.touchPoint.x == 0 && self.touchPoint.y == 0) return nil;
+    
+    id bubble = [self nodeAtPoint:self.touchPoint];
+    if (![bubble isKindOfClass:[BLBubbleNode class]]) return nil;
+    
+    return bubble;
+}
+
+- (void)handleLongPressTimer:(NSTimer *)timer
+{
+    [timer invalidate];
+    
+    //We're not processing this touch if a pan has been recognized
+    if (self.touchesMoved) return;
+    
+    BLBubbleNode *bubble = [self bubbleAtTouchPoint];
+    self.touchPoint = CGPointZero;
+    self.touchesMoved = NO;
+    if (!bubble) return;
+    
+    //If the touch lasted for more than our threshold, we treat it as a long press
+    [self updateBubble:bubble
+               toState:BLBubbleNodeStateRemoved];
 }
 
 @end

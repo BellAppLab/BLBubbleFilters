@@ -179,4 +179,20 @@
     }
 }
 
+
+#pragma mark Aux
+- (BLBubbleNodeState)nextState
+{
+    switch (self.state) {
+        case BLBubbleNodeStateNormal:
+            return BLBubbleNodeStateHighlighted;
+        case BLBubbleNodeStateHighlighted:
+            return BLBubbleNodeStateSuperHighlighted;
+        case BLBubbleNodeStateSuperHighlighted:
+            return BLBubbleNodeStateNormal;
+        default:
+            break;
+    }
+}
+
 @end
