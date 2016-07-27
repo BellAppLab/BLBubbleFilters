@@ -16,6 +16,10 @@
 @property (nonatomic, strong) NSString *text;
 - (void)configure;
 
+//UI
+@property (nonatomic, strong) SKCropNode *backgroundImage;
+@property (nonatomic, strong) SKSpriteNode *icon;
+
 //State and animations
 - (BLBubbleNodeState)stateForKey:(NSString *)key;
 - (NSString * __nullable)animationKeyForState:(BLBubbleNodeState)state;
@@ -71,6 +75,12 @@
     self.physicsBody.friction = 0.0;
     self.physicsBody.linearDamping = 3;
     
+    _backgroundImage = [[SKCropNode alloc] init];
+    _backgroundImage.userInteractionEnabled = NO;
+    _backgroundImage.position = CGPointZero;
+    _backgroundImage.zPosition = 0;
+    [self addChild:_backgroundImage];
+    
     _label = [SKLabelNode labelNodeWithFontNamed:@""];
     _label.text = _text;
     _label.position = CGPointZero;
@@ -79,7 +89,45 @@
     _label.userInteractionEnabled = NO;
     _label.verticalAlignmentMode = SKLabelVerticalAlignmentModeCenter;
     _label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
+    _label.zPosition = 2;
     [self addChild:_label];
+    
+    _icon = [[SKSpriteNode alloc] init];
+    _icon.userInteractionEnabled = NO;
+    _icon.zPosition = 1;
+}
+
+- (void)setBackgroundImage:(SKTexture *)backgroundImage
+{
+    if (backgroundImage) {
+        CGSize imageSize;
+        CGFloat radius;
+        if (backgroundImage.size.width < backgroundImage.size.height) { //Portrait
+            CGFloat percentage = 1 + (self.frame.size.width - backgroundImage.size.width) / backgroundImage.size.width;
+            imageSize = CGSizeMake(self.frame.size.width, backgroundImage.size.height * percentage);
+            radius = self.frame.size.width;
+        } else {
+            CGFloat percentage = 1 + (self.frame.size.height - backgroundImage.size.height) / backgroundImage.size.height;
+            imageSize = CGSizeMake(backgroundImage.size.width * percentage, self.frame.size.height);
+            radius = self.frame.size.height;
+        }
+        
+        SKNode *spriteNode = [SKSpriteNode spriteNodeWithTexture:backgroundImage
+                                                            size:imageSize];
+        spriteNode.userInteractionEnabled = NO;
+        spriteNode.position = CGPointZero;
+        spriteNode.zPosition = 0;
+        SKShapeNode *maskNode = [SKShapeNode shapeNodeWithCircleOfRadius:radius / 2.0];
+        maskNode.position = CGPointZero;
+        maskNode.fillColor = [UIColor blackColor];
+        maskNode.strokeColor = [UIColor clearColor];
+        _backgroundImage.maskNode = maskNode;
+        [_backgroundImage addChild:spriteNode];
+        _backgroundImage.alpha = 0.5;
+    } else {
+        _backgroundImage.maskNode = nil;
+        [_backgroundImage removeFromParent];
+    }
 }
 
 
@@ -101,13 +149,19 @@
 {
     BLBubbleNodeState state = [self stateForKey:key];
     if (state != BLBubbleNodeStateInvalid) {
+        __weak typeof(self) weakSelf = self;
         switch (state) {
             case BLBubbleNodeStateNormal:
-                return [SKAction scaleTo:1.0
-                                duration:0.2];
+                return [SKAction group:@[[SKAction scaleTo:1.0 duration:0.2], [SKAction runBlock:^{
+                    [[weakSelf icon] removeFromParent];
+                    [weakSelf label].position = CGPointZero;
+                }]]];
             case BLBubbleNodeStateHighlighted:
-                return [SKAction scaleTo:1.3
-                                duration:0.2];
+                return [SKAction group:@[[SKAction scaleTo:1.3 duration:0.2], [SKAction runBlock:^{
+                    [weakSelf addChild:[weakSelf icon]];
+                    [weakSelf icon].position = CGPointMake(0, -[weakSelf icon].size.height / 2.0);
+                    [weakSelf label].position = CGPointMake(0, [weakSelf icon].size.height / 2.0);
+                }]]];
             case BLBubbleNodeStateSuperHighlighted:
                 return [SKAction scaleTo:1.8
                                 duration:0.2];

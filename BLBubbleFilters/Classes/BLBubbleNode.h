@@ -43,7 +43,9 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 /*
  UI
  */
-@property (nonatomic, readonly) SKLabelNode *label;
+- (void)setBackgroundImage:(SKTexture * __nullable)backgroundImage;
+@property (nonatomic, strong, readonly) SKLabelNode *label;
+- (void)setIconImage:(SKTexture * __nullable)iconImage;
 
 /*
  Aux

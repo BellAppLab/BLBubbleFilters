@@ -43,7 +43,15 @@
 
 - (NSString *)textForBubbleAtIndex:(NSInteger)index
 {
-    return @"test";
+    return @"bubble";
+}
+
+- (SKTexture *)backgroundImageForBubbleAtIndex:(NSInteger)index
+{
+    if (index == 0) {
+        return [SKTexture textureWithImageNamed:@"bubbles-on-blue-background"];
+    }
+    return nil;
 }
 
 - (SKColor *)bubbleFillColorForState:(BLBubbleNodeState)state
@@ -68,6 +76,14 @@
 - (SKColor *)bubbleTextColorForState:(BLBubbleNodeState)state
 {
     return [UIColor whiteColor];
+}
+
+- (SKTexture *)bubbleIconForState:(BLBubbleNodeState)state
+{
+//    if (state == BLBubbleNodeStateSuperHighlighted) {
+//        return [SKTexture textureWithImageNamed:@"bubbles-on-blue-background"];
+//    }
+    return nil;
 }
 
 @end
