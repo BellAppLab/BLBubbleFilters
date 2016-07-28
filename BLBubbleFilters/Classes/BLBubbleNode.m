@@ -38,7 +38,8 @@
 - (instancetype)initWithRadius:(CGFloat)radius
                        andText:(NSString *)text
 {
-    if (self = [BLBubbleNode shapeNodeWithCircleOfRadius:radius]) {
+    self = [BLBubbleNode shapeNodeWithCircleOfRadius:radius];
+    if (self) {
         _state = BLBubbleNodeStateNormal;
         _text = text;
         
@@ -211,7 +212,7 @@
         }
     }
     
-    [super actionForKey:key];
+    return [super actionForKey:key];
 }
 
 - (void)removeFromParent
@@ -266,7 +267,7 @@
         case BLBubbleNodeStateSuperHighlighted:
             return BLBubbleNodeStateNormal;
         default:
-            break;
+            return BLBubbleNodeStateInvalid;
     }
 }
 
