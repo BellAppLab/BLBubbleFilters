@@ -18,6 +18,6 @@ Apple Music style bubble filters. Inspired by: https://github.com/ProudOfZiggy/S
 
   s.source_files = 'BLBubbleFilters/Classes/**/*'
 
-  s.public_header_files = 'BLBubbleFilters/Classes/**/*.h'
+  # s.public_header_files = 'BLBubbleFilters/Classes/**/*.h'
   s.frameworks = 'UIKit', 'SpriteKit'
 end
