@@ -111,7 +111,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubblesInBubbleScene:weakSelf];
     
     //Getting colours
-    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleFillColorForState:)]) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleFillColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             color = [self.bubbleDataSource bubbleScene:weakSelf
@@ -121,7 +121,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                             forKey:@(i)];
         }
     }
-    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleStrokeColorForState:)]) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleStrokeColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             color = [self.bubbleDataSource bubbleScene:weakSelf
@@ -131,7 +131,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                               forKey:@(i)];
         }
     }
-    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleTextColorForState:)]) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleTextColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             color = [self.bubbleDataSource bubbleScene:weakSelf
@@ -143,16 +143,16 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     }
     
     //Getting the font
-    NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFont)] ? [self.bubbleDataSource bubbleFontNameForBubbleScene:weakSelf] : @"";
+    NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFontNameForBubbleScene:)] ? [self.bubbleDataSource bubbleFontNameForBubbleScene:weakSelf] : @"";
     
     //Should we get background images?
-    BOOL mayUseBackgroundImages = [self.bubbleDataSource respondsToSelector:@selector(backgroundImageForBubbleAtIndex:)];
+    BOOL mayUseBackgroundImages = [self.bubbleDataSource respondsToSelector:@selector(bubbleScene:backgroundImageForBubbleAtIndex:)];
     
     //Should we get icons?
-    BOOL mayUseIcons = [self.bubbleDataSource respondsToSelector:@selector(iconForBubbleAtIndex:)];
+    BOOL mayUseIcons = [self.bubbleDataSource respondsToSelector:@selector(bubbleScene:iconForBubbleAtIndex:)];
     
     //Creating bubbles
-    CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadius)] ? [self.bubbleDataSource bubbleRadiusForBubbleScene:weakSelf] : 30.0;
+    CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadiusForBubbleScene:)] ? [self.bubbleDataSource bubbleRadiusForBubbleScene:weakSelf] : 30.0;
     BLBubbleNode *node = nil;
     for (int i=0; i<numberOfBubbles + 1; i++) {
         node = [[BLBubbleNode alloc] initWithRadius:radius

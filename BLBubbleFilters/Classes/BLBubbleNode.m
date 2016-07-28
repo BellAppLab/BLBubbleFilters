@@ -21,7 +21,7 @@
 - (void)configure;
 
 //UI
-@property (nonatomic, strong) SKCropNode *backgroundImage;
+@property (nonatomic, strong) SKCropNode *backgroundNode;
 @property (nonatomic, strong) SKSpriteNode *icon;
 
 //State and animations
@@ -79,11 +79,11 @@
     self.physicsBody.friction = 0.0;
     self.physicsBody.linearDamping = 3;
     
-    _backgroundImage = [[SKCropNode alloc] init];
-    _backgroundImage.userInteractionEnabled = NO;
-    _backgroundImage.position = CGPointZero;
-    _backgroundImage.zPosition = 0;
-    [self addChild:_backgroundImage];
+    _backgroundNode = [[SKCropNode alloc] init];
+    _backgroundNode.userInteractionEnabled = NO;
+    _backgroundNode.position = CGPointZero;
+    _backgroundNode.zPosition = 0;
+    [self addChild:_backgroundNode];
     
     _label = [SKLabelNode labelNodeWithFontNamed:@""];
     _label.text = _text;
@@ -127,11 +127,11 @@
         maskNode.fillColor = [UIColor blackColor];
         maskNode.strokeColor = [UIColor clearColor];
         
-        _backgroundImage.maskNode = maskNode;
-        [_backgroundImage addChild:spriteNode];
+        _backgroundNode.maskNode = maskNode;
+        [_backgroundNode addChild:spriteNode];
     } else {
-        _backgroundImage.maskNode = nil;
-        [_backgroundImage removeAllChildren];
+        _backgroundNode.maskNode = nil;
+        [_backgroundNode removeAllChildren];
     }
 }
 
