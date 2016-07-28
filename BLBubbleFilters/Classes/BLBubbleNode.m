@@ -165,6 +165,7 @@
 
 #pragma mark State and animations
 @synthesize state = _state;
+@synthesize label = _label;
 
 - (void)setState:(BLBubbleNodeState)state
 {
@@ -185,20 +186,24 @@
         switch (state) {
             case BLBubbleNodeStateNormal:
                 return [SKAction group:@[[SKAction scaleTo:1.0 duration:0.2], [SKAction runBlock:^{
-                    [[weakSelf icon] removeFromParent];
-                    [weakSelf label].position = CGPointZero;
+                    [[weakSelf icon] runAction:[SKAction fadeOutWithDuration:0.1] completion:^{
+                        [[weakSelf icon] removeFromParent];
+                    }];
+                    [[weakSelf label] runAction:[SKAction group:@[[SKAction moveTo:CGPointZero duration:0.2], [SKAction scaleTo:1.0 duration:0.2]]]];
                 }]]];
             case BLBubbleNodeStateHighlighted:
                 return [SKAction group:@[[SKAction scaleTo:1.3 duration:0.2], [SKAction runBlock:^{
                     if ([weakSelf icon]) {
                         [weakSelf addChild:[weakSelf icon]];
-                        [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * IconPercentualInset);
-                        [weakSelf label].position = CGPointMake(0, -[weakSelf icon].size.height * IconPercentualInset);
+                        [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * (IconPercentualInset / 2.0));
+                        [[weakSelf icon] runAction:[SKAction fadeInWithDuration:0.2]];
+                        [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.9 duration:0.1], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:0.1]]]];
                     }
                 }]]];
             case BLBubbleNodeStateSuperHighlighted:
-                return [SKAction scaleTo:1.8
-                                duration:0.2];
+                return [SKAction group:@[[SKAction scaleTo:1.8 duration:0.2], [SKAction runBlock:^{
+                    [[weakSelf label] runAction:[SKAction scaleTo:0.7 duration:0.2]];
+                }]]];
             case BLBubbleNodeStateRemoved:
             {
                 SKAction *disappear = [SKAction fadeOutWithDuration:0.2];
