@@ -9,6 +9,10 @@
 #import "BLBubbleNode.h"
 
 
+#pragma mark Consts
+#define IconPercentualInset 0.4
+
+
 #pragma mark Private Interface
 @interface BLBubbleNode()
 
@@ -91,15 +95,13 @@
     _label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
     _label.zPosition = 2;
     [self addChild:_label];
-    
-    _icon = [[SKSpriteNode alloc] init];
-    _icon.userInteractionEnabled = NO;
-    _icon.zPosition = 1;
 }
 
 - (void)setBackgroundImage:(SKTexture *)backgroundImage
 {
     if (backgroundImage) {
+        //We're defaulting to an aspect fill rendering mode
+        //We have to do it manually though
         CGSize imageSize;
         CGFloat radius;
         if (backgroundImage.size.width < backgroundImage.size.height) { //Portrait
@@ -117,16 +119,45 @@
         spriteNode.userInteractionEnabled = NO;
         spriteNode.position = CGPointZero;
         spriteNode.zPosition = 0;
+        
         SKShapeNode *maskNode = [SKShapeNode shapeNodeWithCircleOfRadius:radius / 2.0];
         maskNode.position = CGPointZero;
+        maskNode.userInteractionEnabled = NO;
+        //If we don't set these colors, bad things happen
         maskNode.fillColor = [UIColor blackColor];
         maskNode.strokeColor = [UIColor clearColor];
+        
         _backgroundImage.maskNode = maskNode;
         [_backgroundImage addChild:spriteNode];
-        _backgroundImage.alpha = 0.5;
     } else {
         _backgroundImage.maskNode = nil;
-        [_backgroundImage removeFromParent];
+        [_backgroundImage removeAllChildren];
+    }
+}
+
+- (void)setIconImage:(SKTexture *)iconImage
+{
+    if (iconImage) {
+        //We're defaulting to an aspect fill rendering mode
+        //We have to do it manually though
+        //The icon size is also set to 40% of the bubble's width
+        CGSize imageSize;
+        if (iconImage.size.width < iconImage.size.height) { //Portrait
+            CGFloat percentage = 1 + (self.frame.size.width - iconImage.size.width) / iconImage.size.width;
+            imageSize = CGSizeMake(self.frame.size.width * IconPercentualInset, iconImage.size.height * percentage * IconPercentualInset);
+        } else {
+            CGFloat percentage = 1 + (self.frame.size.height - iconImage.size.height) / iconImage.size.height;
+            imageSize = CGSizeMake(iconImage.size.width * percentage * IconPercentualInset, self.frame.size.height * IconPercentualInset);
+        }
+        
+        _icon = [[SKSpriteNode alloc] initWithTexture:iconImage
+                                                color:[UIColor clearColor]
+                                                 size:imageSize];
+        _icon.userInteractionEnabled = NO;
+        _icon.zPosition = 1;
+    } else {
+        [_icon removeFromParent];
+        _icon = nil;
     }
 }
 
@@ -158,9 +189,11 @@
                 }]]];
             case BLBubbleNodeStateHighlighted:
                 return [SKAction group:@[[SKAction scaleTo:1.3 duration:0.2], [SKAction runBlock:^{
-                    [weakSelf addChild:[weakSelf icon]];
-                    [weakSelf icon].position = CGPointMake(0, -[weakSelf icon].size.height / 2.0);
-                    [weakSelf label].position = CGPointMake(0, [weakSelf icon].size.height / 2.0);
+                    if ([weakSelf icon]) {
+                        [weakSelf addChild:[weakSelf icon]];
+                        [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * IconPercentualInset);
+                        [weakSelf label].position = CGPointMake(0, -[weakSelf icon].size.height * IconPercentualInset);
+                    }
                 }]]];
             case BLBubbleNodeStateSuperHighlighted:
                 return [SKAction scaleTo:1.8

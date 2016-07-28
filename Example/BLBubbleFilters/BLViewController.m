@@ -46,6 +46,14 @@
     return @"bubble";
 }
 
+- (SKTexture *)iconForBubbleAtIndex:(NSInteger)index
+{
+    if (index != 0) {
+        return [SKTexture textureWithImageNamed:@"bubble"];
+    }
+    return nil;
+}
+
 - (SKTexture *)backgroundImageForBubbleAtIndex:(NSInteger)index
 {
     if (index == 0) {
@@ -76,14 +84,6 @@
 - (SKColor *)bubbleTextColorForState:(BLBubbleNodeState)state
 {
     return [UIColor whiteColor];
-}
-
-- (SKTexture *)bubbleIconForState:(BLBubbleNodeState)state
-{
-//    if (state == BLBubbleNodeStateSuperHighlighted) {
-//        return [SKTexture textureWithImageNamed:@"bubbles-on-blue-background"];
-//    }
-    return nil;
 }
 
 @end

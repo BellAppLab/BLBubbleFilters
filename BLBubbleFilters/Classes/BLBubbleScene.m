@@ -48,7 +48,6 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 @property (nonatomic, strong) NSMutableDictionary *fillColors;
 @property (nonatomic, strong) NSMutableDictionary *strokeColors;
 @property (nonatomic, strong) NSMutableDictionary *textColors;
-@property (nonatomic, strong) NSMutableDictionary *icons;
 - (CGPoint)randomPositionWithRadius:(CGFloat)radius;
 - (void)updateBubble:(BLBubbleNode *)bubble
              toState:(BLBubbleNodeState)nextState;
@@ -105,7 +104,6 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     _fillColors = [NSMutableDictionary new];
     _strokeColors = [NSMutableDictionary new];
     _textColors = [NSMutableDictionary new];
-    _icons = [NSMutableDictionary new];
     
     NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubbles];
     
@@ -138,24 +136,14 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         }
     }
     
-    //Getting icons
-    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleIconForState:)]) {
-        SKTexture *texture;
-        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-            texture = [self.bubbleDataSource bubbleIconForState:(NSInteger)i];
-            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
-            if (texture) {
-                [_icons setObject:texture
-                           forKey:@(i)];
-            }
-        }
-    }
-    
     //Getting the font
     NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFont)] ? [self.bubbleDataSource bubbleFontName] : @"";
     
     //Should we get background images?
     BOOL mayUseBackgroundImages = [self.bubbleDataSource respondsToSelector:@selector(backgroundImageForBubbleAtIndex:)];
+    
+    //Should we get icons?
+    BOOL mayUseIcons = [self.bubbleDataSource respondsToSelector:@selector(iconForBubbleAtIndex:)];
     
     //Creating bubbles
     CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadius)] ? [self.bubbleDataSource bubbleRadius] : 30.0;
@@ -174,6 +162,11 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         //Getting background images
         if (mayUseBackgroundImages) {
             [node setBackgroundImage:[self.bubbleDataSource backgroundImageForBubbleAtIndex:(NSInteger)i]];
+        }
+        
+        //Getting icons
+        if (mayUseIcons) {
+            [node setIconImage:[self.bubbleDataSource iconForBubbleAtIndex:(NSInteger)i]];
         }
         
         //Tucking the bubble in
