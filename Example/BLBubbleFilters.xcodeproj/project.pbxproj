@@ -22,6 +22,7 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
+		A54E34071D4A52AF00A26F1B /* BLDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A54E34061D4A52AF00A26F1B /* BLDataModel.m */; };
 		D4C1BC491FDB09E846077D2C /* Pods_BLBubbleFilters_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 500DC4727F76991297DD94EE /* Pods_BLBubbleFilters_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,8 @@
 		6003F5BB195388D20070C39A /* Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Tests.m; sourceTree = "<group>"; };
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		A54E34051D4A52AF00A26F1B /* BLDataModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLDataModel.h; sourceTree = "<group>"; };
+		A54E34061D4A52AF00A26F1B /* BLDataModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLDataModel.m; sourceTree = "<group>"; };
 		A759C30C723229514614D876 /* Pods-BLBubbleFilters_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BLBubbleFilters_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BLBubbleFilters_Tests/Pods-BLBubbleFilters_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		B604B5EB446265FC2940F349 /* BLBubbleFilters.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = BLBubbleFilters.podspec; path = ../BLBubbleFilters.podspec; sourceTree = "<group>"; };
 		D6C5C26CF6B9A60605B9FAC7 /* Pods-BLBubbleFilters_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BLBubbleFilters_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-BLBubbleFilters_Example/Pods-BLBubbleFilters_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -135,6 +138,8 @@
 				873B8AEA1B1F5CCA007FD442 /* Main.storyboard */,
 				6003F5A5195388D20070C39A /* BLViewController.h */,
 				6003F5A6195388D20070C39A /* BLViewController.m */,
+				A54E34051D4A52AF00A26F1B /* BLDataModel.h */,
+				A54E34061D4A52AF00A26F1B /* BLDataModel.m */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);
@@ -391,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* BLAppDelegate.m in Sources */,
+				A54E34071D4A52AF00A26F1B /* BLDataModel.m in Sources */,
 				6003F5A7195388D20070C39A /* BLViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);

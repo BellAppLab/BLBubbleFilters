@@ -2,7 +2,7 @@
 //  BLBubbleScene.m
 //  Pods
 //
-//  Created by Founders Factory on 26/07/2016.
+//  Created by Bell App Lab on 26/07/2016.
 //
 //
 
@@ -145,38 +145,22 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     //Getting the font
     NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFontNameForBubbleScene:)] ? [self.bubbleDataSource bubbleFontNameForBubbleScene:weakSelf] : @"";
     
-    //Should we get background images?
-    BOOL mayUseBackgroundImages = [self.bubbleDataSource respondsToSelector:@selector(bubbleScene:backgroundImageForBubbleAtIndex:)];
-    
-    //Should we get icons?
-    BOOL mayUseIcons = [self.bubbleDataSource respondsToSelector:@selector(bubbleScene:iconForBubbleAtIndex:)];
-    
     //Creating bubbles
     CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadiusForBubbleScene:)] ? [self.bubbleDataSource bubbleRadiusForBubbleScene:weakSelf] : 30.0;
+    
     BLBubbleNode *node = nil;
     for (int i=0; i<numberOfBubbles; i++) {
-        node = [[BLBubbleNode alloc] initWithRadius:radius
-                                            andText:[self.bubbleDataSource bubbleScene:weakSelf
-                                                                  textForBubbleAtIndex:(NSInteger)i]];
+        node = [[BLBubbleNode alloc] initWithRadius:radius];
+        
+        node.model = [self.bubbleDataSource bubbleScene:weakSelf
+                                  modelForBubbleAtIndex:(NSInteger)i];
         
         //making the bubble beautiful
-        node.label.fontName = fontName;
         NSNumber *normalState = @(BLBubbleNodeStateNormal);
         node.fillColor = [_fillColors objectForKey:normalState];
         node.strokeColor = [_strokeColors objectForKey:normalState];
         node.label.fontColor = [_textColors objectForKey:normalState];
-        
-        //Getting background images
-        if (mayUseBackgroundImages) {
-            [node setBackgroundImage:[self.bubbleDataSource bubbleScene:weakSelf
-                                        backgroundImageForBubbleAtIndex:(NSInteger)i]];
-        }
-        
-        //Getting icons
-        if (mayUseIcons) {
-            [node setIconImage:[self.bubbleDataSource bubbleScene:weakSelf
-                                             iconForBubbleAtIndex:(NSInteger)i]];
-        }
+        node.label.fontName = fontName;
         
         //Tucking the bubble in
         [_bubbles addObject:node];

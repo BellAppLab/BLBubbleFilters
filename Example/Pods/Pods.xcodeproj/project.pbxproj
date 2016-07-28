@@ -15,6 +15,7 @@
 		72EAD2830CBAF5575AA596D2B0A66C5C /* BLBubbleNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D36584E2D63F9AD1DD313710FA16BA7 /* BLBubbleNode.m */; };
 		7425D0EC8940E339C2E02617EC7ED525 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDECEF55F7E9F791117D73EDD4422B54 /* Foundation.framework */; };
 		869A0B7382BFA23B4A82F25272D3103A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDECEF55F7E9F791117D73EDD4422B54 /* Foundation.framework */; };
+		A54E34021D4A3E7C00A26F1B /* BLBubbleFilters.h in Headers */ = {isa = PBXBuildFile; fileRef = A54E34011D4A3E7C00A26F1B /* BLBubbleFilters.h */; };
 		A7F8622172740347280E018E0D1DE039 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89645902C5F9455782527659D657A410 /* SpriteKit.framework */; };
 		B48CEAE0CD496E4C534C2C6AD2A32127 /* Pods-BLBubbleFilters_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 354CADA33C513DCD0A5A532BC3B59450 /* Pods-BLBubbleFilters_Example-dummy.m */; };
 		BB5FBE930530AAB3BD5CFDDAF1096978 /* BLBubbleFilters-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = ABB005A47B7621C2D9EA00D450CDC7CC /* BLBubbleFilters-dummy.m */; };
@@ -53,6 +54,7 @@
 		7CC4914C02EE3F0C6A0571B819BB1495 /* Pods-BLBubbleFilters_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-BLBubbleFilters_Tests-umbrella.h"; sourceTree = "<group>"; };
 		89645902C5F9455782527659D657A410 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.3.sdk/System/Library/Frameworks/SpriteKit.framework; sourceTree = DEVELOPER_DIR; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A54E34011D4A3E7C00A26F1B /* BLBubbleFilters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLBubbleFilters.h; sourceTree = "<group>"; };
 		AAA225B2B39E944C96CBCA13BFE134E3 /* Pods-BLBubbleFilters_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-BLBubbleFilters_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		AABE0CCAA39ADF9512A0FBF055BA9119 /* BLBubbleScene.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = BLBubbleScene.m; sourceTree = "<group>"; };
 		ABB005A47B7621C2D9EA00D450CDC7CC /* BLBubbleFilters-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "BLBubbleFilters-dummy.m"; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 		A31AE9D4E6383B3AD611AE5BFBEE3E87 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				A54E34011D4A3E7C00A26F1B /* BLBubbleFilters.h */,
 				BAF625C64DFBC725F2DF986B0FDE239F /* BLBubbleNode.h */,
 				2D36584E2D63F9AD1DD313710FA16BA7 /* BLBubbleNode.m */,
 				68CA344947F855AA0FCCE03B75EAB36D /* BLBubbleScene.h */,
@@ -256,6 +259,7 @@
 			files = (
 				DDDA8C2E14F20902F0CACD7659DEB8CF /* BLBubbleFilters-umbrella.h in Headers */,
 				5CAFE5DC5582C2F4F2B25EDD5F3D0FAF /* BLBubbleNode.h in Headers */,
+				A54E34021D4A3E7C00A26F1B /* BLBubbleFilters.h in Headers */,
 				5E11BB154273FA5F25AC041F548C2522 /* BLBubbleScene.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

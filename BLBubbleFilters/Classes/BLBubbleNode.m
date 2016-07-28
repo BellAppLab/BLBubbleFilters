@@ -2,7 +2,7 @@
 //  BLBubbleNode.m
 //  Pods
 //
-//  Created by Founders Factory on 26/07/2016.
+//  Created by Bell App Lab on 26/07/2016.
 //
 //
 
@@ -17,10 +17,11 @@
 @interface BLBubbleNode()
 
 //Setup
-@property (nonatomic, strong) NSString *text;
 - (void)configure;
 
 //UI
+- (void)setBackgroundImage:(SKTexture * __nullable)backgroundImage;
+- (void)setIconImage:(SKTexture * __nullable)iconImage;
 @property (nonatomic, strong) SKCropNode *backgroundNode;
 @property (nonatomic, strong) SKSpriteNode *icon;
 
@@ -36,12 +37,10 @@
 
 #pragma Convenience initialiser
 - (instancetype)initWithRadius:(CGFloat)radius
-                       andText:(NSString *)text
 {
     self = [BLBubbleNode shapeNodeWithCircleOfRadius:radius];
     if (self) {
         _state = BLBubbleNodeStateNormal;
-        _text = text;
         
         [self configure];
     }
@@ -53,7 +52,6 @@
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     _state = [aDecoder decodeIntegerForKey:@"state"];
-    _text = [aDecoder decodeObjectForKey:@"text"];
     
     return [super initWithCoder:aDecoder];
 }
@@ -62,8 +60,6 @@
 {
     [aCoder encodeInteger:_state
                    forKey:@"state"];
-    [aCoder encodeObject:_text
-                  forKey:@"text"];
     
     [super encodeWithCoder:aCoder];
 }
@@ -87,7 +83,6 @@
     [self addChild:_backgroundNode];
     
     _label = [SKLabelNode labelNodeWithFontNamed:@""];
-    _label.text = _text;
     _label.position = CGPointZero;
     _label.fontColor = [SKColor whiteColor];
     _label.fontSize = 10;
@@ -96,6 +91,20 @@
     _label.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeCenter;
     _label.zPosition = 2;
     [self addChild:_label];
+}
+
+- (void)setModel:(id<BLBubbleModel>)model
+{
+    _label.text = model.bubbleText;
+    self.state = model.bubbleState;
+    
+    if ([model respondsToSelector:@selector(bubbleIcon)]) {
+        [self setIconImage:model.bubbleIcon];
+    }
+    
+    if ([model respondsToSelector:@selector(bubbleBackground)]) {
+        [self setBackgroundImage:model.bubbleBackground];
+    }
 }
 
 - (void)setBackgroundImage:(SKTexture *)backgroundImage
@@ -173,6 +182,7 @@
         //Animate
         [self removeAllActions];
         [self runAction:[self actionForKey:[self animationKeyForState:state]]];
+        self.model.bubbleState = state;
     }
     
     _state = state;

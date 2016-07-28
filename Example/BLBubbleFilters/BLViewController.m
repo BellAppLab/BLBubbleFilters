@@ -7,13 +7,34 @@
 //
 
 #import "BLViewController.h"
-@import BLBubbleFilters;
+#import "BLDataModel.h"
+
 
 @interface BLViewController () <BLBubbleSceneDataSource, BLBubbleSceneDelegate>
 
+@property (nonatomic, strong) NSArray<id<BLBubbleModel>> *dataModel;
+
 @end
 
+
 @implementation BLViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    NSMutableArray *array = [NSMutableArray new];
+    for (int i=0; i<10; i++) {
+        [array addObject:[BLDataModel new]];
+    }
+    
+    BLDataModel *wierdModel = [BLDataModel new];
+    wierdModel.bubbleState = BLBubbleNodeStateHighlighted;
+    wierdModel.background = [SKTexture textureWithImageNamed:@"bubbles-on-blue-background"];
+    [array addObject:wierdModel];
+    
+    self.dataModel = [NSArray arrayWithArray:array];
+}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -31,30 +52,13 @@
 
 - (NSInteger)numberOfBubblesInBubbleScene:(BLBubbleScene *)scene
 {
-    return 10;
+    return self.dataModel.count;
 }
 
-- (NSString *)bubbleScene:(BLBubbleScene *)scene
-     textForBubbleAtIndex:(NSInteger)index
+- (id<BLBubbleModel>)bubbleScene:(BLBubbleScene *)scene
+           modelForBubbleAtIndex:(NSInteger)index
 {
-    return @"bubble";
-}
-
-- (SKTexture *)bubbleScene:(BLBubbleScene *)scene
-      iconForBubbleAtIndex:(NSInteger)index
-{
-    if (index != 0) {
-        return [SKTexture textureWithImageNamed:@"bubble"];
-    }
-    return nil;
-}
-
-- (SKTexture *)bubbleScene:(BLBubbleScene *)scene backgroundImageForBubbleAtIndex:(NSInteger)index
-{
-    if (index == 0) {
-        return [SKTexture textureWithImageNamed:@"bubbles-on-blue-background"];
-    }
-    return nil;
+    return self.dataModel[index];
 }
 
 - (SKColor *)bubbleScene:(BLBubbleScene *)scene

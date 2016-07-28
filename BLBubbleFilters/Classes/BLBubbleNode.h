@@ -2,13 +2,15 @@
 //  BLBubbleNode.h
 //  Pods
 //
-//  Created by Founders Factory on 26/07/2016.
+//  Created by Bell App Lab on 26/07/2016.
 //
 //
 
 #import <SpriteKit/SpriteKit.h>
 
+
 NS_ASSUME_NONNULL_BEGIN
+
 
 #pragma mark Typedefs
 typedef NS_ENUM(NSInteger, BLBubbleNodeState) {
@@ -25,14 +27,23 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 };
 
 
+#pragma mark Protocols
+@protocol BLBubbleModel <NSObject>
+@property (nonatomic, readonly) NSString *bubbleText;
+@property (nonatomic, assign) BLBubbleNodeState bubbleState;
+@optional
+@property (nonatomic, readonly) SKTexture * __nullable bubbleIcon;
+@property (nonatomic, readonly) SKTexture * __nullable bubbleBackground;
+@end
+
+
 #pragma mark - Main Class
 @interface BLBubbleNode : SKShapeNode
 
 /*
  Convenience initialiser
  */
-- (instancetype)initWithRadius:(CGFloat)radius
-                       andText:(NSString * __nullable)text;
+- (instancetype)initWithRadius:(CGFloat)radius;
 
 /*
  The current state of the bubble
@@ -41,11 +52,14 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 @property (nonatomic, assign) BLBubbleNodeState state;
 
 /*
+ Data Model
+ */
+@property (nonatomic, weak) id<BLBubbleModel> __nullable model;
+
+/*
  UI
  */
-- (void)setBackgroundImage:(SKTexture * __nullable)backgroundImage;
 @property (nonatomic, strong, readonly) SKLabelNode *label;
-- (void)setIconImage:(SKTexture * __nullable)iconImage;
 
 /*
  Aux

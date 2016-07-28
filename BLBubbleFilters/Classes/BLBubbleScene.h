@@ -2,12 +2,13 @@
 //  BLBubbleScene.h
 //  Pods
 //
-//  Created by Founders Factory on 26/07/2016.
+//  Created by Bell App Lab on 26/07/2016.
 //
 //
 
 #import <SpriteKit/SpriteKit.h>
 #import "BLBubbleNode.h"
+
 
 NS_ASSUME_NONNULL_BEGIN
 @class BLBubbleScene;
@@ -51,41 +52,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSInteger)numberOfBubblesInBubbleScene:(BLBubbleScene *)scene;
 
-/**
- Tells the Bubble Scene which texts to be presented inside each bubble
- 
- @param scene   The Bubble Scene that needs texts
- @param index   The index of the bubble that needs text
- */
-- (NSString * __nullable)bubbleScene:(BLBubbleScene *)scene
-     textForBubbleAtIndex:(NSInteger)index;
+- (id<BLBubbleModel>)bubbleScene:(BLBubbleScene *)scene
+           modelForBubbleAtIndex:(NSInteger)index;
 
 @optional
-/**
- Tells the Bubble Scene to use icons inside the bubbles
- 
- @param scene   The Bubble Scene that wansts icons
- @param index   The index of the bubble that may have an icon
- 
- @note  This is optional
- 
- @see `[BLBubbleNode setIconImage:]`
- */
-- (SKTexture * __nullable)bubbleScene:(BLBubbleScene *)scene
-                 iconForBubbleAtIndex:(NSInteger)index;
-
-/**
- Tells the Bubble Scene to put background images on the bubbles
- 
- @param scene   The Bubble Scene that wants background images
- @param index   The index of the bubble that may have a background image
- 
- @note  This is optional
- 
- @see `[BLBubbleNode setBackgroundImage:]`
- */
-- (SKTexture * __nullable)bubbleScene:(BLBubbleScene *)scene
-      backgroundImageForBubbleAtIndex:(NSInteger)index;
 
 /**
  Tells the Bubble Scene the background colour to set on the bubbles
