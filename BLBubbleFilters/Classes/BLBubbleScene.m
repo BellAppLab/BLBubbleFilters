@@ -105,13 +105,17 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     _strokeColors = [NSMutableDictionary new];
     _textColors = [NSMutableDictionary new];
     
-    NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubbles];
+    //Don't want the data source retaining us strongly again
+    __weak typeof(self) weakSelf = self;
+    
+    NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubblesInBubbleScene:weakSelf];
     
     //Getting colours
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleFillColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-            color = [self.bubbleDataSource bubbleFillColorForState:(NSInteger)i];
+            color = [self.bubbleDataSource bubbleScene:weakSelf
+                               bubbleFillColorForState:(NSInteger)i];
             //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
             [_fillColors setObject:color ? color : [UIColor clearColor]
                             forKey:@(i)];
@@ -120,7 +124,8 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleStrokeColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-            color = [self.bubbleDataSource bubbleStrokeColorForState:(NSInteger)i];
+            color = [self.bubbleDataSource bubbleScene:weakSelf
+                             bubbleStrokeColorForState:(NSInteger)i];
             //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
             [_strokeColors setObject:color ? color : [UIColor clearColor]
                               forKey:@(i)];
@@ -129,7 +134,8 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleTextColorForState:)]) {
         SKColor *color;
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-            color = [self.bubbleDataSource bubbleTextColorForState:(NSInteger)i];
+            color = [self.bubbleDataSource bubbleScene:weakSelf
+                               bubbleTextColorForState:(NSInteger)i];
             //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
             [_textColors setObject:color ? color : [UIColor clearColor]
                             forKey:@(i)];
@@ -137,7 +143,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     }
     
     //Getting the font
-    NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFont)] ? [self.bubbleDataSource bubbleFontName] : @"";
+    NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFont)] ? [self.bubbleDataSource bubbleFontNameForBubbleScene:weakSelf] : @"";
     
     //Should we get background images?
     BOOL mayUseBackgroundImages = [self.bubbleDataSource respondsToSelector:@selector(backgroundImageForBubbleAtIndex:)];
@@ -146,11 +152,12 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     BOOL mayUseIcons = [self.bubbleDataSource respondsToSelector:@selector(iconForBubbleAtIndex:)];
     
     //Creating bubbles
-    CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadius)] ? [self.bubbleDataSource bubbleRadius] : 30.0;
+    CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadius)] ? [self.bubbleDataSource bubbleRadiusForBubbleScene:weakSelf] : 30.0;
     BLBubbleNode *node = nil;
     for (int i=0; i<numberOfBubbles + 1; i++) {
         node = [[BLBubbleNode alloc] initWithRadius:radius
-                                            andText:[self.bubbleDataSource textForBubbleAtIndex:(NSInteger)i]];
+                                            andText:[self.bubbleDataSource bubbleScene:weakSelf
+                                                                  textForBubbleAtIndex:(NSInteger)i]];
         
         //making the bubble beautiful
         node.label.fontName = fontName;
@@ -161,12 +168,14 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         
         //Getting background images
         if (mayUseBackgroundImages) {
-            [node setBackgroundImage:[self.bubbleDataSource backgroundImageForBubbleAtIndex:(NSInteger)i]];
+            [node setBackgroundImage:[self.bubbleDataSource bubbleScene:weakSelf
+                                        backgroundImageForBubbleAtIndex:(NSInteger)i]];
         }
         
         //Getting icons
         if (mayUseIcons) {
-            [node setIconImage:[self.bubbleDataSource iconForBubbleAtIndex:(NSInteger)i]];
+            [node setIconImage:[self.bubbleDataSource bubbleScene:weakSelf
+                                             iconForBubbleAtIndex:(NSInteger)i]];
         }
         
         //Tucking the bubble in
@@ -217,8 +226,9 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         bubble.label.fontColor = [[weakSelf textColors] objectForKey:numberState];
 //        bubble.icon.texture = [[weakSelf icons] objectForKey:numberState];
     }]];
-    [self.bubbleDelegate didSelectBubble:bubble
-                                 atIndex:index];
+    [self.bubbleDelegate bubbleScene:weakSelf
+                     didSelectBubble:bubble
+                             atIndex:index];
 }
 
 
