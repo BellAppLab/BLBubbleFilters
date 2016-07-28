@@ -154,7 +154,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     //Creating bubbles
     CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadiusForBubbleScene:)] ? [self.bubbleDataSource bubbleRadiusForBubbleScene:weakSelf] : 30.0;
     BLBubbleNode *node = nil;
-    for (int i=0; i<numberOfBubbles + 1; i++) {
+    for (int i=0; i<numberOfBubbles; i++) {
         node = [[BLBubbleNode alloc] initWithRadius:radius
                                             andText:[self.bubbleDataSource bubbleScene:weakSelf
                                                                   textForBubbleAtIndex:(NSInteger)i]];
