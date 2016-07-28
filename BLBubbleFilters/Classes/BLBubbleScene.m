@@ -142,8 +142,11 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         }
     }
     
-    //Getting the font
+    //Getting the font name
     NSString *fontName = [self.bubbleDataSource respondsToSelector:@selector(bubbleFontNameForBubbleScene:)] ? [self.bubbleDataSource bubbleFontNameForBubbleScene:weakSelf] : @"";
+    
+    //Getting the font size
+    CGFloat fontSize = [self.bubbleDataSource respondsToSelector:@selector(bubbleFontSizeForBubbleScene:)] ? [self.bubbleDataSource bubbleFontSizeForBubbleScene:weakSelf] : 10;
     
     //Creating bubbles
     CGFloat radius = [self.bubbleDataSource respondsToSelector:@selector(bubbleRadiusForBubbleScene:)] ? [self.bubbleDataSource bubbleRadiusForBubbleScene:weakSelf] : 30.0;
@@ -161,6 +164,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         node.strokeColor = [_strokeColors objectForKey:normalState];
         node.label.fontColor = [_textColors objectForKey:normalState];
         node.label.fontName = fontName;
+        node.label.fontSize = fontSize;
         
         //Tucking the bubble in
         [_bubbles addObject:node];

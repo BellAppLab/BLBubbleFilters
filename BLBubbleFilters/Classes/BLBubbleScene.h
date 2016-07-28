@@ -115,6 +115,8 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (NSString *)bubbleFontNameForBubbleScene:(BLBubbleScene *)scene;
 
+- (CGFloat)bubbleFontSizeForBubbleScene:(BLBubbleScene *)scene;
+
 /**
  Tells the Bubble Scene the bubbles' radii
  
