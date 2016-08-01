@@ -95,15 +95,15 @@
 
 - (void)setModel:(id<BLBubbleModel>)model
 {
-    _label.text = model.bubbleText;
-    self.state = model.bubbleState;
+    _label.text = [model bubbleText];
+    self.state = [model bubbleState];
     
     if ([model respondsToSelector:@selector(bubbleIcon)]) {
-        [self setIconImage:model.bubbleIcon];
+        [self setIconImage:[model bubbleIcon]];
     }
     
     if ([model respondsToSelector:@selector(bubbleBackground)]) {
-        [self setBackgroundImage:model.bubbleBackground];
+        [self setBackgroundImage:[model bubbleBackground]];
     }
 }
 
