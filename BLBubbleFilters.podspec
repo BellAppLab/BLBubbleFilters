@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'BLBubbleFilters'
-  s.version          = '0.2.3'
+  s.version          = '0.2.3.1'
   s.summary          = 'Apple Music style bubble filters.'
 
   s.description      = <<-DESC
