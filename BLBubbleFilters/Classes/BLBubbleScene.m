@@ -116,9 +116,10 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             color = [self.bubbleDataSource bubbleScene:weakSelf
                                bubbleFillColorForState:(NSInteger)i];
-            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
-            [_fillColors setObject:color ? color : [UIColor clearColor]
-                            forKey:@(i)];
+            if (color) {
+                [_fillColors setObject:color
+                                forKey:@(i)];
+            }
         }
     }
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleStrokeColorForState:)]) {
@@ -126,9 +127,10 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             color = [self.bubbleDataSource bubbleScene:weakSelf
                              bubbleStrokeColorForState:(NSInteger)i];
-            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
-            [_strokeColors setObject:color ? color : [UIColor clearColor]
-                              forKey:@(i)];
+            if (color) {
+                [_strokeColors setObject:color
+                                  forKey:@(i)];
+            }
         }
     }
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleTextColorForState:)]) {
@@ -136,9 +138,10 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             color = [self.bubbleDataSource bubbleScene:weakSelf
                                bubbleTextColorForState:(NSInteger)i];
-            //We default to a clear colour if the delegate hasn't implemented all items in the BLBubbleNodeState enum
-            [_textColors setObject:color ? color : [UIColor clearColor]
-                            forKey:@(i)];
+            if (color) {
+                [_textColors setObject:color
+                                forKey:@(i)];
+            }
         }
     }
     
@@ -216,15 +219,22 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     
     bubble.state = nextState;
     NSNumber *numberState = @(nextState);
-    __weak typeof(self) weakSelf = self;
+    UIColor *fillColor = [_fillColors objectForKey:numberState];
+    UIColor *strokeColor = [_strokeColors objectForKey:numberState];
+    UIColor *fontColor = [_textColors objectForKey:numberState];
     [bubble runAction:[SKAction runBlock:^{
-#warning TODO: fix missing colours
-        //If the data source hasn't implemented all colours, we shouldn't default to [UIColor clearColor]
-        //We should not change the colour at all
-        bubble.fillColor = [[weakSelf fillColors] objectForKey:numberState];
-        bubble.strokeColor = [[weakSelf strokeColors] objectForKey:numberState];
-        bubble.label.fontColor = [[weakSelf textColors] objectForKey:numberState];
+        if (fillColor) {
+            bubble.fillColor = fillColor;
+        }
+        if (strokeColor) {
+            bubble.strokeColor = strokeColor;
+        }
+        if (fontColor) {
+            bubble.label.fontColor = fontColor;
+        }
     }]];
+    
+    __weak typeof(self) weakSelf = self;
     [self.bubbleDelegate bubbleScene:weakSelf
                      didSelectBubble:bubble
                              atIndex:index];

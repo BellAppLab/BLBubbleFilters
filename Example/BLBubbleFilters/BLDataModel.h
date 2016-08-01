@@ -2,8 +2,7 @@
 //  BLDataModel.h
 //  BLBubbleFilters
 //
-//  Created by Founders Factory on 28/07/2016.
-//  Copyright © 2016 André Campana. All rights reserved.
+//  Created by André Campana on 28/07/2016.
 //
 
 #import <Foundation/Foundation.h>
