@@ -157,19 +157,31 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         
         node.model = [self.bubbleDataSource bubbleScene:weakSelf
                                   modelForBubbleAtIndex:(NSInteger)i];
+        BLBubbleNodeState state = [node.model bubbleState];
         
-        //making the bubble beautiful
-        NSNumber *normalState = @(BLBubbleNodeStateNormal);
-        node.fillColor = [_fillColors objectForKey:normalState];
-        node.strokeColor = [_strokeColors objectForKey:normalState];
-        node.label.fontColor = [_textColors objectForKey:normalState];
-        node.label.fontName = fontName;
-        node.label.fontSize = fontSize;
-        
-        //Tucking the bubble in
-        [_bubbles addObject:node];
-        node.position = [self randomPositionWithRadius:radius];
-        [self addChild:node];
+        //Only add a bubble if the model's initial state is right
+        switch (state) {
+            case BLBubbleNodeStateNormal:
+            case BLBubbleNodeStateHighlighted:
+            case BLBubbleNodeStateSuperHighlighted:
+            {
+                //making the bubble beautiful
+                NSNumber *normalState = @(state);
+                node.fillColor = [_fillColors objectForKey:normalState];
+                node.strokeColor = [_strokeColors objectForKey:normalState];
+                node.label.fontColor = [_textColors objectForKey:normalState];
+                node.label.fontName = fontName;
+                node.label.fontSize = fontSize;
+                
+                //Tucking the bubble in
+                [_bubbles addObject:node];
+                node.position = [self randomPositionWithRadius:radius];
+                [self addChild:node];
+            }
+                break;
+            default:
+                break;
+        }
     }
 }
 
@@ -212,7 +224,6 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
         bubble.fillColor = [[weakSelf fillColors] objectForKey:numberState];
         bubble.strokeColor = [[weakSelf strokeColors] objectForKey:numberState];
         bubble.label.fontColor = [[weakSelf textColors] objectForKey:numberState];
-//        bubble.icon.texture = [[weakSelf icons] objectForKey:numberState];
     }]];
     [self.bubbleDelegate bubbleScene:weakSelf
                      didSelectBubble:bubble

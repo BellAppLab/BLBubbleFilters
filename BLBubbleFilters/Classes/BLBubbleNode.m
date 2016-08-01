@@ -40,7 +40,7 @@
 {
     self = [BLBubbleNode shapeNodeWithCircleOfRadius:radius];
     if (self) {
-        _state = BLBubbleNodeStateNormal;
+        _state = BLBubbleNodeStateInvalid;
         
         [self configure];
     }
@@ -93,10 +93,12 @@
     [self addChild:_label];
 }
 
+#pragma mark Data Model
 - (void)setModel:(id<BLBubbleModel>)model
 {
+    _model = model;
+    
     _label.text = [model bubbleText];
-    self.state = [model bubbleState];
     
     if ([model respondsToSelector:@selector(bubbleIcon)]) {
         [self setIconImage:[model bubbleIcon]];
@@ -105,6 +107,10 @@
     if ([model respondsToSelector:@selector(bubbleBackground)]) {
         [self setBackgroundImage:[model bubbleBackground]];
     }
+    
+    [self setState:[model bubbleState]];
+    //Order here is very important!
+    //Upon calling setState:, we need to have the other properties set so to place elements correctly in the bubble
 }
 
 - (void)setBackgroundImage:(SKTexture *)backgroundImage
