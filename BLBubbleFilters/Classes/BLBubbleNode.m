@@ -187,6 +187,8 @@
     if (_state != state) {
         //Animate
         [self removeAllActions];
+        [_icon removeAllActions];
+        [_label removeAllActions];
         [self runAction:[self actionForKey:[self animationKeyForState:state]]];
         self.model.bubbleState = state;
     }
