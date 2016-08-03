@@ -8,6 +8,7 @@
 
 #import "BLBubbleScene.h"
 #import <UIKit/UIKit.h>
+#import "BLConsts.h"
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -51,6 +52,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 - (CGPoint)randomPositionWithRadius:(CGFloat)radius;
 - (void)updateBubble:(BLBubbleNode *)bubble
              toState:(BLBubbleNodeState)nextState;
+- (void)handleAnimationTimer:(NSTimer *)timer;
 
 @end
 
@@ -222,7 +224,15 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     UIColor *fillColor = [_fillColors objectForKey:numberState];
     UIColor *strokeColor = [_strokeColors objectForKey:numberState];
     UIColor *fontColor = [_textColors objectForKey:numberState];
-    [bubble runAction:[SKAction runBlock:^{
+    
+    //When calling this method with its completion block, such block may not be called upon the completion of the whole of the animations set out in the action block. Therefore, we're falling back to having a timer fire after twice the AnimationDuration time has elapsed
+    [NSTimer scheduledTimerWithTimeInterval:AnimationDuration * 2.0
+                                     target:self
+                                   selector:@selector(handleAnimationTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
+    [bubble runAction:[SKAction runBlock:^
+    {
         if (fillColor) {
             bubble.fillColor = fillColor;
         }
@@ -240,11 +250,20 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                              atIndex:index];
 }
 
+- (void)handleAnimationTimer:(NSTimer *)timer
+{
+    [timer invalidate];
+    [self resetTouches];
+}
+
 
 #pragma mark Handling touches
 - (void)touchesBegan:(NSSet<UITouch *> *)touches
            withEvent:(UIEvent * __nullable)event
 {
+    //We're avoiding processing another tap if the user has already tapped and we're still animating stuff (eg. in the case of a double tap)
+    if (self.touchTapped) return;
+    
     UITouch *touch = [touches anyObject];
     if (!touch) return;
     
@@ -310,7 +329,8 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
            withEvent:(UIEvent * __nullable)event
 {
     //We're not processing this touch as a tap or a long press if a pan has been recognized
-    if (self.touchesMoved) return;
+    //We're also avoiding processing another tap if the user has already tapped and we're still animating stuff (eg. in the case of a double tap)
+    if (self.touchesMoved && self.touchTapped) return;
     
     BLBubbleNode *bubble = [self bubbleAtTouchPoint];
     [self resetTouches];
