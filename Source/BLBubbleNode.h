@@ -1,11 +1,3 @@
-//
-//  BLBubbleNode.h
-//  Pods
-//
-//  Created by Bell App Lab on 26/07/2016.
-//
-//
-
 #import <SpriteKit/SpriteKit.h>
 
 

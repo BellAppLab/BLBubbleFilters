@@ -1,11 +1,3 @@
-//
-//  BLBubbleScene.m
-//  Pods
-//
-//  Created by Bell App Lab on 26/07/2016.
-//
-//
-
 #import "BLBubbleScene.h"
 #import <UIKit/UIKit.h>
 #import "BLConsts.h"

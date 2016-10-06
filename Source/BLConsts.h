@@ -1,11 +1,3 @@
-//
-//  BLConsts.h
-//  Pods
-//
-//  Created by Founders Factory on 03/08/2016.
-//
-//
-
 #ifndef BLConsts_h
 #define BLConsts_h
 
