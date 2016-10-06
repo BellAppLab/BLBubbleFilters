@@ -14,8 +14,11 @@ Transform this:
 
 * iOS 8+
 * Obj-C
+* SpriteKit
 
 ## Installation
+
+First, add `SpriteKit` to your project. Then:
 
 ### Cocoapods
 
