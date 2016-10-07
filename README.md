@@ -2,6 +2,8 @@
 
 Apple Music style bubble filters. Inspired by: https://github.com/ProudOfZiggy/SIFloatingCollection_Swift
 
+_v0.3.0_
+
 ## Usage
 
 Transform this:
@@ -34,7 +36,7 @@ To install Backgroundable using git submodules:
 
 ```
 cd toYourProjectsFolder
-git submodule add --name BLBubbleFilters https://github.com/BellAppLab/BLBubbleFilters.git
+git submodule add -b submodule --name BLBubbleFilters https://github.com/BellAppLab/BLBubbleFilters.git
 ```
 
 Navigate to the new BLBubbleFilters folder and drag the `Source` folder into your Xcode project.
