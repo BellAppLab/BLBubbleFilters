@@ -4,6 +4,8 @@
 
 .DS_Store
 
+Example/
+
 ## Build generated
 build/
 DerivedData/
