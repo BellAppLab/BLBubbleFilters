@@ -1,21 +1,31 @@
 #import <SpriteKit/SpriteKit.h>
 
+#pragma mark Consts
+///Determines the duration of the animations when the user taps on a bubble
+extern double BLBubbleFiltersAnimationDuration;
+///Determines how smaller than the bubble's diameter its icon should be
+extern double BLBubbleFiltersIconPercentualInset;
+
 
 NS_ASSUME_NONNULL_BEGIN
 
-
 #pragma mark Typedefs
+/**
+ BLBubbleNodeState
+ 
+ These are the states a Bubble Node can be in
+ */
 typedef NS_ENUM(NSInteger, BLBubbleNodeState) {
+    ///Invalid state
     BLBubbleNodeStateInvalid = -1,
+    ///The bubble has been removed from the scene
     BLBubbleNodeStateRemoved = 0,
+    ///The bubble is just sitting there. This is the default state
     BLBubbleNodeStateNormal = 1,
+    ///The bubble has been tapped once and is a bit larger than it was when in the normal state
     BLBubbleNodeStateHighlighted = 2,
+    ///The bubble has been tapped twice and is super larger than before
     BLBubbleNodeStateSuperHighlighted = 3
-};
-
-typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
-    BLBubbleNodeStateCountFirst = BLBubbleNodeStateRemoved,
-    BLBubbleNodeStateCountLast = BLBubbleNodeStateSuperHighlighted
 };
 
 
@@ -32,29 +42,31 @@ typedef NS_ENUM(NSInteger, BLBubbleNodeStateCount) {
 #pragma mark - Main Class
 @interface BLBubbleNode : SKShapeNode
 
-/*
+/**
  Convenience initialiser
  */
 - (instancetype)initWithRadius:(CGFloat)radius;
 
-/*
+/**
  The current state of the bubble
  Defaults to `BLBubbleNodeStateNormal`
  */
 @property (nonatomic, assign) BLBubbleNodeState state;
 
-/*
- Data Model
+/**
+ The bubble's data model
  */
 @property (nonatomic, weak) id<BLBubbleModel> __nullable model;
 
-/*
- UI
+/**
+ The bubble's label
  */
 @property (nonatomic, strong, readonly) SKLabelNode *label;
 
-/*
- Aux
+/**
+ The bubbble's next state
+ 
+ @discussion: If the bubble is in the normal state, the next state will be highlighted. If highlighted, than super highlighted. If super highlighted than normal
  */
 - (BLBubbleNodeState)nextState;
 

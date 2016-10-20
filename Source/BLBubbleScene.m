@@ -218,7 +218,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     UIColor *fontColor = [_textColors objectForKey:numberState];
     
     //When calling this method with its completion block, such block may not be called upon the completion of the whole of the animations set out in the action block. Therefore, we're falling back to having a timer fire after twice the AnimationDuration time has elapsed
-    [NSTimer scheduledTimerWithTimeInterval:AnimationDuration * 2.0
+    [NSTimer scheduledTimerWithTimeInterval:BLBubbleFiltersAnimationDuration * 2.0
                                      target:self
                                    selector:@selector(handleAnimationTimer:)
                                    userInfo:nil
@@ -334,7 +334,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                toState:[bubble nextState]];
 }
 
-- (void)touchesCancelled:(NSSet<UITouch *> * __nullable)touches
+- (void)touchesCancelled:(NSSet<UITouch *> * __nonnull)touches
                withEvent:(UIEvent * __nullable)event
 {
     [self resetTouches];
