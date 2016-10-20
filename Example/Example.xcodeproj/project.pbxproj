@@ -15,6 +15,8 @@
 		6567F6131DB8FA2C0066261D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6567F6111DB8FA2C0066261D /* LaunchScreen.storyboard */; };
 		6567F6211DB8FA340066261D /* BLBubbleNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6567F61D1DB8FA340066261D /* BLBubbleNode.m */; };
 		6567F6221DB8FA340066261D /* BLBubbleScene.m in Sources */ = {isa = PBXBuildFile; fileRef = 6567F61F1DB8FA340066261D /* BLBubbleScene.m */; };
+		6567F6261DB900A10066261D /* Bubble.m in Sources */ = {isa = PBXBuildFile; fileRef = 6567F6251DB900A10066261D /* Bubble.m */; };
+		6567F62B1DB903EB0066261D /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6567F62A1DB903EB0066261D /* SpriteKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,9 @@
 		6567F61F1DB8FA340066261D /* BLBubbleScene.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLBubbleScene.m; sourceTree = "<group>"; };
 		6567F6201DB8FA340066261D /* BLConsts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLConsts.h; sourceTree = "<group>"; };
 		6567F6231DB8FA950066261D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		6567F6241DB900A10066261D /* Bubble.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bubble.h; sourceTree = "<group>"; };
+		6567F6251DB900A10066261D /* Bubble.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bubble.m; sourceTree = "<group>"; };
+		6567F62A1DB903EB0066261D /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6567F62B1DB903EB0066261D /* SpriteKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,6 +61,7 @@
 				6567F61A1DB8FA340066261D /* Source */,
 				6567F6021DB8FA2C0066261D /* Example */,
 				6567F6011DB8FA2C0066261D /* Products */,
+				6567F6271DB903DE0066261D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -73,6 +80,8 @@
 				6567F6071DB8FA2C0066261D /* AppDelegate.m */,
 				6567F6091DB8FA2C0066261D /* ViewController.h */,
 				6567F60A1DB8FA2C0066261D /* ViewController.m */,
+				6567F6241DB900A10066261D /* Bubble.h */,
+				6567F6251DB900A10066261D /* Bubble.m */,
 				6567F60C1DB8FA2C0066261D /* Main.storyboard */,
 				6567F60F1DB8FA2C0066261D /* Assets.xcassets */,
 				6567F6111DB8FA2C0066261D /* LaunchScreen.storyboard */,
@@ -102,6 +111,14 @@
 			);
 			name = Source;
 			path = ../Source;
+			sourceTree = "<group>";
+		};
+		6567F6271DB903DE0066261D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6567F62A1DB903EB0066261D /* SpriteKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +195,7 @@
 				6567F60B1DB8FA2C0066261D /* ViewController.m in Sources */,
 				6567F6211DB8FA340066261D /* BLBubbleNode.m in Sources */,
 				6567F6221DB8FA340066261D /* BLBubbleScene.m in Sources */,
+				6567F6261DB900A10066261D /* Bubble.m in Sources */,
 				6567F6081DB8FA2C0066261D /* AppDelegate.m in Sources */,
 				6567F6051DB8FA2C0066261D /* main.m in Sources */,
 			);
