@@ -56,6 +56,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (id<BLBubbleModel>)bubbleScene:(BLBubbleScene *)scene
            modelForBubbleAtIndex:(NSInteger)index;
 
+@optional
+
 /**
  Tells the Bubble Scene the background colour to set on the bubbles
  
@@ -103,8 +105,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (SKColor * __nullable)bubbleScene:(BLBubbleScene *)scene
             bubbleTextColorForState:(BLBubbleNodeState)state;
-
-@optional
 
 /**
  Tells the Bubble Scene the name of the font to set on the bubbles

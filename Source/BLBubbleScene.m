@@ -105,27 +105,53 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubblesInBubbleScene:weakSelf];
     
     //Getting colours
-    SKColor *color;
-    for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-        color = [self.bubbleDataSource bubbleScene:weakSelf
-                           bubbleFillColorForState:(NSInteger)i];
-        if (color) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleFillColorForState:)]) {
+        SKColor *color;
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            color = [self.bubbleDataSource bubbleScene:weakSelf
+                               bubbleFillColorForState:(NSInteger)i];
+            if (color) {
+                [_fillColors setObject:color
+                                forKey:@(i)];
+            }
+        }
+    } else {
+        SKColor *color = [UIColor blackColor];
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             [_fillColors setObject:color
                             forKey:@(i)];
         }
     }
-    for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-        color = [self.bubbleDataSource bubbleScene:weakSelf
-                         bubbleStrokeColorForState:(NSInteger)i];
-        if (color) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleStrokeColorForState:)]) {
+        SKColor *color;
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            color = [self.bubbleDataSource bubbleScene:weakSelf
+                             bubbleStrokeColorForState:(NSInteger)i];
+            if (color) {
+                [_strokeColors setObject:color
+                                  forKey:@(i)];
+            }
+        }
+    } else {
+        SKColor *color = [UIColor blackColor];
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             [_strokeColors setObject:color
                               forKey:@(i)];
         }
     }
-    for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
-        color = [self.bubbleDataSource bubbleScene:weakSelf
-                           bubbleTextColorForState:(NSInteger)i];
-        if (color) {
+    if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleTextColorForState:)]) {
+        SKColor *color;
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            color = [self.bubbleDataSource bubbleScene:weakSelf
+                               bubbleTextColorForState:(NSInteger)i];
+            if (color) {
+                [_textColors setObject:color
+                                forKey:@(i)];
+            }
+        }
+    } else {
+        SKColor *color = [UIColor whiteColor];
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             [_textColors setObject:color
                             forKey:@(i)];
         }

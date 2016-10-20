@@ -26,7 +26,7 @@
 {
     [super viewWillAppear:animated];
     
-    BLBubbleScene *scene = [BLBubbleScene sceneWithSize:self.view.bounds.size];
+    BLBubbleScene *scene = [BLBubbleScene sceneWithSize:CGSizeMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0)];
     scene.backgroundColor = [UIColor whiteColor];
     scene.bubbleDataSource = self;
     scene.bubbleDelegate = self;
@@ -55,24 +55,6 @@
            modelForBubbleAtIndex:(NSInteger)index
 {
     return [self.bubbles objectAtIndex:index];
-}
-
-- (SKColor *)bubbleScene:(BLBubbleScene *)scene
- bubbleFillColorForState:(BLBubbleNodeState)state
-{
-    return [UIColor blueColor];
-}
-
-- (SKColor *)bubbleScene:(BLBubbleScene *)scene
- bubbleTextColorForState:(BLBubbleNodeState)state
-{
-    return [UIColor whiteColor];
-}
-
-- (SKColor *)bubbleScene:(BLBubbleScene *)scene
-bubbleStrokeColorForState:(BLBubbleNodeState)state
-{
-    return [UIColor clearColor];
 }
 
 @end

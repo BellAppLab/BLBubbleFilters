@@ -16,16 +16,14 @@ NS_ASSUME_NONNULL_BEGIN
  These are the states a Bubble Node can be in
  */
 typedef NS_ENUM(NSInteger, BLBubbleNodeState) {
-    ///Invalid state
-    BLBubbleNodeStateInvalid = -1,
     ///The bubble has been removed from the scene
-    BLBubbleNodeStateRemoved = 0,
+    BLBubbleNodeStateRemoved = -1,
     ///The bubble is just sitting there. This is the default state
-    BLBubbleNodeStateNormal = 1,
+    BLBubbleNodeStateNormal = 0,
     ///The bubble has been tapped once and is a bit larger than it was when in the normal state
-    BLBubbleNodeStateHighlighted = 2,
+    BLBubbleNodeStateHighlighted = 1,
     ///The bubble has been tapped twice and is super larger than before
-    BLBubbleNodeStateSuperHighlighted = 3
+    BLBubbleNodeStateSuperHighlighted = 2
 };
 
 

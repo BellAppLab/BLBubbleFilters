@@ -33,7 +33,7 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
 {
     self = [BLBubbleNode shapeNodeWithCircleOfRadius:radius];
     if (self) {
-        _state = BLBubbleNodeStateInvalid;
+        _state = BLBubbleNodeStateNormal;
         
         [self configure];
     }
@@ -192,7 +192,7 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
 - (SKAction *)actionForKey:(NSString *)key
 {
     BLBubbleNodeState state = [self stateForKey:key];
-    if (state != BLBubbleNodeStateInvalid) {
+    if (state != BLBubbleNodeStateRemoved) {
         __weak typeof(self) weakSelf = self;
         switch (state) {
             case BLBubbleNodeStateNormal:
@@ -261,7 +261,7 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
             return i;
         }
     }
-    return BLBubbleNodeStateInvalid;
+    return BLBubbleNodeStateNormal;
 }
 
 - (NSString * __nullable)animationKeyForState:(BLBubbleNodeState)state
@@ -289,10 +289,8 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
             return BLBubbleNodeStateHighlighted;
         case BLBubbleNodeStateHighlighted:
             return BLBubbleNodeStateSuperHighlighted;
-        case BLBubbleNodeStateSuperHighlighted:
-            return BLBubbleNodeStateNormal;
         default:
-            return BLBubbleNodeStateInvalid;
+            return BLBubbleNodeStateNormal;
     }
 }
 
