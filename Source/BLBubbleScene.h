@@ -155,7 +155,7 @@ NS_ASSUME_NONNULL_BEGIN
  {
     [super viewWillAppear:animated];
  
-    BLBubbleScene *scene = [[BLBubbleScene alloc] initWithSize:self.view.frame.size];
+    BLBubbleScene *scene = [BLBubbleScene sceneWithSize:self.view.frame.size];
     scene.bubbleDataSource = self;
     scene.bubbleDelegate = self;
  

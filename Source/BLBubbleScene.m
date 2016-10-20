@@ -115,6 +115,12 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                                 forKey:@(i)];
             }
         }
+    } else {
+        SKColor *color = [UIColor blackColor];
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            [_fillColors setObject:color
+                            forKey:@(i)];
+        }
     }
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleStrokeColorForState:)]) {
         SKColor *color;
@@ -126,6 +132,12 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                                   forKey:@(i)];
             }
         }
+    } else {
+        SKColor *color = [UIColor blackColor];
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            [_strokeColors setObject:color
+                              forKey:@(i)];
+        }
     }
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleTextColorForState:)]) {
         SKColor *color;
@@ -136,6 +148,12 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                 [_textColors setObject:color
                                 forKey:@(i)];
             }
+        }
+    } else {
+        SKColor *color = [UIColor whiteColor];
+        for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
+            [_textColors setObject:color
+                            forKey:@(i)];
         }
     }
     
@@ -218,7 +236,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     UIColor *fontColor = [_textColors objectForKey:numberState];
     
     //When calling this method with its completion block, such block may not be called upon the completion of the whole of the animations set out in the action block. Therefore, we're falling back to having a timer fire after twice the AnimationDuration time has elapsed
-    [NSTimer scheduledTimerWithTimeInterval:AnimationDuration * 2.0
+    [NSTimer scheduledTimerWithTimeInterval:BLBubbleFiltersAnimationDuration * 2.0
                                      target:self
                                    selector:@selector(handleAnimationTimer:)
                                    userInfo:nil
@@ -334,7 +352,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
                toState:[bubble nextState]];
 }
 
-- (void)touchesCancelled:(NSSet<UITouch *> * __nullable)touches
+- (void)touchesCancelled:(NSSet<UITouch *> * __nonnull)touches
                withEvent:(UIEvent * __nullable)event
 {
     [self resetTouches];
