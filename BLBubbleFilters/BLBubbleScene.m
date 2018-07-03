@@ -1,3 +1,27 @@
+/*
+ MIT License
+ 
+ Copyright (c) 2018 Bell App Lab
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+
 #import "BLBubbleScene.h"
 #import <UIKit/UIKit.h>
 #import "BLConsts.h"
@@ -93,16 +117,16 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 #pragma mark Loading
 - (void)reload
 {
-    //Resetting stuff
-    _bubbles = [NSMutableArray new];
-    _fillColors = [NSMutableDictionary new];
-    _strokeColors = [NSMutableDictionary new];
-    _textColors = [NSMutableDictionary new];
-    
     //Don't want the data source retaining us strongly again
     __weak typeof(self) weakSelf = self;
     
     NSInteger numberOfBubbles = [self.bubbleDataSource numberOfBubblesInBubbleScene:weakSelf];
+    
+    //Resetting stuff
+    _bubbles = [NSMutableArray arrayWithCapacity:numberOfBubbles];
+    _fillColors = [NSMutableDictionary dictionaryWithCapacity:(int)BLBubbleNodeStateCountLast];
+    _strokeColors = [NSMutableDictionary dictionaryWithCapacity:(int)BLBubbleNodeStateCountLast];
+    _textColors = [NSMutableDictionary dictionaryWithCapacity:(int)BLBubbleNodeStateCountLast];
     
     //Getting colours
     if ([self.bubbleDataSource respondsToSelector:@selector(bubbleScene:bubbleFillColorForState:)]) {
@@ -116,7 +140,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
             }
         }
     } else {
-        SKColor *color = [UIColor blackColor];
+        SKColor *color = [SKColor blackColor];
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             [_fillColors setObject:color
                             forKey:@(i)];
@@ -133,7 +157,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
             }
         }
     } else {
-        SKColor *color = [UIColor blackColor];
+        SKColor *color = [SKColor blackColor];
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             [_strokeColors setObject:color
                               forKey:@(i)];
@@ -150,7 +174,7 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
             }
         }
     } else {
-        SKColor *color = [UIColor whiteColor];
+        SKColor *color = [SKColor whiteColor];
         for (int i=(int)BLBubbleNodeStateCountFirst; i<(int)BLBubbleNodeStateCountLast + 1; i++) {
             [_textColors setObject:color
                             forKey:@(i)];
@@ -200,7 +224,6 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
     }
 }
 
-
 #pragma mark Nodes
 - (CGPoint)randomPositionWithRadius:(CGFloat)radius
 {
@@ -227,13 +250,14 @@ CGFloat getRandomCGFloatWith(CGFloat min, CGFloat max) {
 {
     NSInteger index = [self.bubbles indexOfObject:bubble];
     if (index == NSNotFound) return;
-    if (nextState == BLBubbleNodeStateInvalid) return;
     
     bubble.state = nextState;
+    if (nextState == BLBubbleNodeStateRemoved) return;
+    
     NSNumber *numberState = @(nextState);
-    UIColor *fillColor = [_fillColors objectForKey:numberState];
-    UIColor *strokeColor = [_strokeColors objectForKey:numberState];
-    UIColor *fontColor = [_textColors objectForKey:numberState];
+    SKColor *fillColor = [_fillColors objectForKey:numberState];
+    SKColor *strokeColor = [_strokeColors objectForKey:numberState];
+    SKColor *fontColor = [_textColors objectForKey:numberState];
     
     //When calling this method with its completion block, such block may not be called upon the completion of the whole of the animations set out in the action block. Therefore, we're falling back to having a timer fire after twice the AnimationDuration time has elapsed
     [NSTimer scheduledTimerWithTimeInterval:BLBubbleFiltersAnimationDuration * 2.0

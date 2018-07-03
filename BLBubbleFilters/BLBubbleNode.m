@@ -1,3 +1,27 @@
+/*
+ MIT License
+ 
+ Copyright (c) 2018 Bell App Lab
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+
 #import "BLBubbleNode.h"
 #import "BLConsts.h"
 
@@ -133,8 +157,8 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
         maskNode.position = CGPointZero;
         maskNode.userInteractionEnabled = NO;
         //If we don't set these colors, bad things happen
-        maskNode.fillColor = [UIColor blackColor];
-        maskNode.strokeColor = [UIColor clearColor];
+        maskNode.fillColor = [SKColor blackColor];
+        maskNode.strokeColor = [SKColor clearColor];
         
         _backgroundNode.maskNode = maskNode;
         [_backgroundNode addChild:spriteNode];
@@ -159,8 +183,10 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
             imageSize = CGSizeMake(iconImage.size.width * percentage * BLBubbleFiltersIconPercentualInset, self.frame.size.height * BLBubbleFiltersIconPercentualInset);
         }
         
+        [_icon removeFromParent];
+        
         _icon = [[SKSpriteNode alloc] initWithTexture:iconImage
-                                                color:[UIColor clearColor]
+                                                color:[SKColor clearColor]
                                                  size:imageSize];
         _icon.userInteractionEnabled = NO;
         _icon.zPosition = 1;
@@ -192,49 +218,47 @@ double BLBubbleFiltersIconPercentualInset = 0.4;
 - (SKAction *)actionForKey:(NSString *)key
 {
     BLBubbleNodeState state = [self stateForKey:key];
-    if (state != BLBubbleNodeStateRemoved) {
-        __weak typeof(self) weakSelf = self;
-        switch (state) {
-            case BLBubbleNodeStateNormal:
-                return [SKAction group:@[[SKAction scaleTo:1.0 duration:BLBubbleFiltersAnimationDuration], [SKAction runBlock:^{
-                    [[weakSelf icon] runAction:[SKAction fadeOutWithDuration:BLBubbleFiltersAnimationDuration] completion:^{
-                        [[weakSelf icon] removeFromParent];
-                    }];
-                    [[weakSelf label] runAction:[SKAction group:@[[SKAction moveTo:CGPointZero duration:BLBubbleFiltersAnimationDuration], [SKAction scaleTo:1.0 duration:BLBubbleFiltersAnimationDuration]]]];
-                }]]];
-            case BLBubbleNodeStateHighlighted:
-                return [SKAction group:@[[SKAction scaleTo:1.3 duration:BLBubbleFiltersAnimationDuration], [SKAction runBlock:^{
-                    if ([weakSelf icon] && [[weakSelf icon] parent] == nil) {
-                        [weakSelf addChild:[weakSelf icon]];
-                        [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * (BLBubbleFiltersIconPercentualInset / 2.0));
-                        [[weakSelf icon] runAction:[SKAction fadeInWithDuration:BLBubbleFiltersAnimationDuration]];
-                        [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.9 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:BLBubbleFiltersAnimationDuration]]]];
-                    } else {
-                        [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.9 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:BLBubbleFiltersAnimationDuration]]]];
-                    }
-                }]]];
-            case BLBubbleNodeStateSuperHighlighted:
-                return [SKAction group:@[[SKAction scaleTo:1.8 duration:BLBubbleFiltersAnimationDuration], [SKAction runBlock:^{
-                    if ([weakSelf icon] && [weakSelf icon].parent == nil) {
-                        [weakSelf addChild:[weakSelf icon]];
-                        [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * (BLBubbleFiltersIconPercentualInset / 2.0));
-                        [[weakSelf icon] runAction:[SKAction fadeInWithDuration:BLBubbleFiltersAnimationDuration]];
-                        [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.7 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:BLBubbleFiltersAnimationDuration]]]];
-                    } else {
-                        [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.7 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:BLBubbleFiltersAnimationDuration]]]];
-                    }
-                }]]];
-            case BLBubbleNodeStateRemoved:
-            {
-                SKAction *disappear = [SKAction fadeOutWithDuration:BLBubbleFiltersAnimationDuration];
-                SKAction *explode = [SKAction scaleTo:1.2
-                                             duration:BLBubbleFiltersAnimationDuration];
-                SKAction *remove = [SKAction removeFromParent];
-                return [SKAction sequence:@[[SKAction group:@[disappear, explode]], remove]];
-            }
-            default:
-                break;
+    __weak typeof(self) weakSelf = self;
+    switch (state) {
+        case BLBubbleNodeStateNormal:
+            return [SKAction group:@[[SKAction scaleTo:1.0 duration:BLBubbleFiltersAnimationDuration], [SKAction runBlock:^{
+                [[weakSelf icon] runAction:[SKAction fadeOutWithDuration:BLBubbleFiltersAnimationDuration] completion:^{
+                    [[weakSelf icon] removeFromParent];
+                }];
+                [[weakSelf label] runAction:[SKAction group:@[[SKAction moveTo:CGPointZero duration:BLBubbleFiltersAnimationDuration], [SKAction scaleTo:1.0 duration:BLBubbleFiltersAnimationDuration]]]];
+            }]]];
+        case BLBubbleNodeStateHighlighted:
+            return [SKAction group:@[[SKAction scaleTo:1.3 duration:BLBubbleFiltersAnimationDuration], [SKAction runBlock:^{
+                if ([weakSelf icon] && [[weakSelf icon] parent] == nil) {
+                    [weakSelf addChild:[weakSelf icon]];
+                    [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * (BLBubbleFiltersIconPercentualInset / 2.0));
+                    [[weakSelf icon] runAction:[SKAction fadeInWithDuration:BLBubbleFiltersAnimationDuration]];
+                    [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.9 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:BLBubbleFiltersAnimationDuration]]]];
+                } else {
+                    [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.9 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, 0) duration:BLBubbleFiltersAnimationDuration]]]];
+                }
+            }]]];
+        case BLBubbleNodeStateSuperHighlighted:
+            return [SKAction group:@[[SKAction scaleTo:1.8 duration:BLBubbleFiltersAnimationDuration], [SKAction runBlock:^{
+                if ([weakSelf icon] && [weakSelf icon].parent == nil) {
+                    [weakSelf addChild:[weakSelf icon]];
+                    [weakSelf icon].position = CGPointMake(0, [weakSelf icon].size.height * (BLBubbleFiltersIconPercentualInset / 2.0));
+                    [[weakSelf icon] runAction:[SKAction fadeInWithDuration:BLBubbleFiltersAnimationDuration]];
+                    [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.7 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, -[weakSelf label].frame.size.height * 1.5) duration:BLBubbleFiltersAnimationDuration]]]];
+                } else {
+                    [[weakSelf label] runAction:[SKAction group:@[[SKAction scaleTo:0.7 duration:BLBubbleFiltersAnimationDuration], [SKAction moveTo:CGPointMake(0, 0) duration:BLBubbleFiltersAnimationDuration]]]];
+                }
+            }]]];
+        case BLBubbleNodeStateRemoved:
+        {
+            SKAction *disappear = [SKAction fadeOutWithDuration:BLBubbleFiltersAnimationDuration];
+            SKAction *explode = [SKAction scaleTo:1.2
+                                         duration:BLBubbleFiltersAnimationDuration];
+            SKAction *remove = [SKAction removeFromParent];
+            return [SKAction sequence:@[[SKAction group:@[disappear, explode]], remove]];
         }
+        default:
+            break;
     }
     
     return [super actionForKey:key];
