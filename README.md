@@ -1,16 +1,89 @@
-# BLBubbleFilters
+# BLBubbleFilters [![Version](https://img.shields.io/badge/Version-1.0-black.svg?style=flat)](#installation) [![License](https://img.shields.io/cocoapods/l/BLBubbleFilters.svg?style=flat)](#license)
 
-Apple Music style bubble filters. Inspired by: https://github.com/ProudOfZiggy/SIFloatingCollection_Swift
+[![Platforms](https://img.shields.io/badge/Platforms-iOS|tvOS-brightgreen.svg?style=flat)](#installation)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/BLBubbleFilters.svg?style=flat&label=CocoaPods)](https://cocoapods.org/pods/BLBubbleFilters)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![Twitter](https://img.shields.io/badge/Twitter-@BellAppLab-blue.svg?style=flat)](http://twitter.com/BellAppLab)
 
-_v0.3.0_
+![BLBubbleFilters](./Images/bubble_filters.png)
+
+![BLBubbleFilters](./Images/bubble_filters.gif)
+
+BLBubbleFilters gives you bubble filters à la Apple Music.
+
+Inspired by: [SIFloatingCollection_Swift](https://github.com/ProudOfZiggy/SIFloatingCollection_Swift)
+
+## Specs
+
+* SpriteKit
+* iOS 9+
+* tvOS 9+
 
 ## Usage
 
-This is a typical implementation of `BLBubbleFilters` looks like this:
+The starting point of using `BLBubbleFilters` is the `BLBubbleScene` class. We begin by initialising one:
+
+```objc
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    BLBubbleScene *scene = [BLBubbleScene sceneWithSize:CGSizeMake(self.view.bounds.size.width / 2.0, self.view.bounds.size.height / 2.0)];
+    scene.backgroundColor = [UIColor whiteColor];
+    scene.bubbleDataSource = <#code#>;
+    scene.bubbleDelegate = <#code#>;
+
+    [(SKView *)self.view presentScene:scene];
+}
+```
+
+**Notes**:
+1. We highly recommend initialising a `BLBubbleScene` on `viewWillAppear:` so it gets correctly adjusted to the screen size.
+2. The example above assumes your view controller's `view` is a `SKView`.
+
+### Scene data source
+
+You must provide the `BLBubbleScene` with a data source conforming to the `BLBubbleSceneDataSource` protocol. Its two required methods are:
+
+```objc
+//provides the scene with the number of bubbles to present
+- (NSInteger)numberOfBubblesInBubbleScene:(BLBubbleScene *)scene {
+    return <#code#>;
+}
+```
+
+And:
+
+```objc
+- (id<BLBubbleModel>)bubbleScene:(BLBubbleScene *)scene
+           modelForBubbleAtIndex:(NSInteger)index
+{
+    return <#code#>;
+}
+```
+
+The `BLBubbleModel` protocol provides a bubble with some of the visual information it needs to draw itself.
+
+### Scene delegate
+
+You may set the scene's `delegate`, if you'd like to be notified when a bubble is selected:
+
+```objc
+- (void)bubbleScene:(BLBubbleScene *)scene
+    didSelectBubble:(BLBubbleNode *)bubble
+            atIndex:(NSInteger)index
+{
+    //a bubble has been tapped
+}
+```
+
+## Example
+
+A typical implementation of `BLBubbleFilters` looks like this:
 
 ```objc
 #import "ViewController.h"
-#import "BLBubbleFilters.h"
+#import <BLBubbleFilters/BLBubbleFilters.h>
 #import "Bubble.h"
 
 
@@ -28,9 +101,9 @@ This is a typical implementation of `BLBubbleFilters` looks like this:
     [super viewDidLoad];
     
     [self setBubbles:@[[[Bubble alloc] initWithIndex:0],
-    [[Bubble alloc] initWithIndex:1],
-    [[Bubble alloc] initWithIndex:2],
-    [[Bubble alloc] initWithIndex:3]]];
+                       [[Bubble alloc] initWithIndex:1],
+                       [[Bubble alloc] initWithIndex:2],
+                       [[Bubble alloc] initWithIndex:3]]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -72,7 +145,7 @@ This is a typical implementation of `BLBubbleFilters` looks like this:
 
 ```
 
-_Note: Implementation of the `Bubble` Data Model is up to you. ;)_
+_**Note**: Implementation of the `Bubble` Data Model is up to you. ;)_
 
 ## Requirements
 
@@ -82,30 +155,38 @@ _Note: Implementation of the `Bubble` Data Model is up to you. ;)_
 
 ## Installation
 
-First, add `SpriteKit` to your project. Then:
-
 ### Cocoapods
 
-Because of [this](http://stackoverflow.com/questions/39637123/cocoapods-app-xcworkspace-does-not-exists), I've dropped support for Cocoapods on this repo. I cannot have production code rely on a dependency manager that breaks this badly. 
+```ruby
+pod 'BLBubbleFilters', '~> 1.0'
+```
+
+Then `#import <BLBubbleFilters/BLBubbleFilters.h>` where needed.
+
+### Carthage
+
+```objc
+github "BellAppLab/BLBubbleFilters" ~> 1.0
+```
+
+Then `#import <BLBubbleFilters/BLBubbleFilters.h>` where needed.
 
 ### Git Submodules
 
-**Why submodules, you ask?**
-
-Following [this thread](http://stackoverflow.com/questions/31080284/adding-several-pods-increases-ios-app-launch-time-by-10-seconds#31573908) and other similar to it, and given that Cocoapods only works with Swift by adding the use_frameworks! directive, there's a strong case for not bloating the app up with too many frameworks. Although git submodules are a bit trickier to work with, the burden of adding dependencies should weigh on the developer, not on the user. :wink:
-
-To install BLBubbleFilters using git submodules:
-
-```
+```shell
 cd toYourProjectsFolder
 git submodule add -b submodule --name BLBubbleFilters https://github.com/BellAppLab/BLBubbleFilters.git
 ```
 
-Navigate to the new BLBubbleFilters folder and drag the `Source` folder into your Xcode project.
+Then drag the `BLBubbleFilters` folder into your Xcode project.
 
 ## Author
 
 Bell App Lab, apps@bellapplab.com
+
+### Credits
+
+[Logo image](https://thenounproject.com/search/?q=bubble&i=1118287#) by [Jaohuarye](https://thenounproject.com/jaohuarye) from [The Noun Project](https://thenounproject.com/)
 
 ## License
 

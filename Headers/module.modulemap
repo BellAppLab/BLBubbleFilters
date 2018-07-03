@@ -1,0 +1,6 @@
+framework module BLBubbleFilters {
+    umbrella header "BLBubbleFilters.h"
+    
+    export *
+    module * { export * }
+}
