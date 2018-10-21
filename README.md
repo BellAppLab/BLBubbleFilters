@@ -1,4 +1,4 @@
-# BLBubbleFilters [![Version](https://img.shields.io/badge/Version-1.0-black.svg?style=flat)](#installation) [![License](https://img.shields.io/cocoapods/l/BLBubbleFilters.svg?style=flat)](#license)
+# BLBubbleFilters [![Version](https://img.shields.io/badge/Version-1.0.1-black.svg?style=flat)](#installation) [![License](https://img.shields.io/cocoapods/l/BLBubbleFilters.svg?style=flat)](#license)
 
 [![Platforms](https://img.shields.io/badge/Platforms-iOS|tvOS-brightgreen.svg?style=flat)](#installation)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/BLBubbleFilters.svg?style=flat&label=CocoaPods)](https://cocoapods.org/pods/BLBubbleFilters)
