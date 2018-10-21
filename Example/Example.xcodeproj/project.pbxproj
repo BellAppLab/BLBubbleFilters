@@ -594,7 +594,7 @@
 				PRODUCT_NAME = BLBubbleFilters;
 				SDKROOT = iphoneos;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
-				VERSION = 1.0;
+				VERSION = 1.0.1;
 			};
 			name = Debug;
 		};
@@ -649,7 +649,7 @@
 				SDKROOT = iphoneos;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 				VALIDATE_PRODUCT = YES;
-				VERSION = 1.0;
+				VERSION = 1.0.1;
 			};
 			name = Release;
 		};

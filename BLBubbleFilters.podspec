@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name                = "BLBubbleFilters"
-  s.version             = "1.0.0"
+  s.version             = "1.0.1"
   s.summary             = "BLBubbleFilters gives you bubble filters à la Apple Music."
   s.screenshots         = ["https://github.com/BellAppLab/BLBubbleFilters/raw/master/Images/bubble_filters.png",
                            "https://github.com/BellAppLab/BLBubbleFilters/raw/master/Images/bubble_filters.gif"]
